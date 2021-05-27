@@ -1,21 +1,61 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, SafeAreaView, Button, Text, View, Alert } from 'react-native';
+
+const Separator = () => (
+    <View style={styles.separator} />
+);
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+return (
+    <SafeAreaView style={styles.container}>     
+      <View style={styles.base}>
+        <Text style={styles.base}>
+              nom perso
+        </Text>
+      </View>
 
+
+      <Separator />
+
+      <View style={styles.base}>
+        <Text style={styles.base}>
+            comp Racial du perso
+        </Text>        
+      </View>
+
+        <Separator />
+
+      <View style={styles.base}>
+        <Text style={styles.base}>
+              outils, langues, armes & armures maitrisés
+        </Text>
+      </View>
+
+      <Separator />
+
+      <View style={styles.base}>
+        <Text style={styles.base}>
+             système de cards / capacité
+        </Text>        
+      </View>
+    </SafeAreaView>
+  );
+};
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        marginHorizontal: 16,
+    },
+    base: {
+         backgroundColor: '#ddd',
+         alignItems: 'center',
+         justifyContent: 'center',
+    },
+    separator: {
+        marginVertical: 8,
+        borderBottomColor: '#737373',
+    },
 });
+
