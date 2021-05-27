@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, Button } from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
+import Button from '../Button';
 import { Picker } from 'react-native-picker';
 
 export default function DescriptionForm(props) {
 
-    console.log(props.character);
     const [name, setName] = useState(props.character.name);
     const [size, setSize] = useState(props.character.size);
     const [age, setAge] = useState(props.character.age);
@@ -33,47 +33,55 @@ export default function DescriptionForm(props) {
 
     return (
         <View style={styles.container}>
-            <Text> Description Form </Text>
             <View>
                 <TextInput placeholder="Enter Player Name" 
+                    style={styles.input}
                     onChangeText={text => setName(text)}
                     value={name}
                 />
                 <TextInput placeholder="Enter Character size" 
+                    style={styles.input}
                     onChangeText={text => setSize(text)}
                     value={size}
                 />
                 <TextInput placeholder="Enter Character age" 
+                    style={styles.input}
                     onChangeText={text => setAge(text)}
                     value={age}
                 />
                 <TextInput placeholder="Enter Character sex" 
+                    style={styles.input}
                     onChangeText={text => setSex(text)}
                     value={sex}
                 />
                 <TextInput placeholder="Enter Character peronnality traits" 
+                    style={styles.input}
                     onChangeText={text => setPersonnality(text)}
                     value={personnality}
                 />
                 <TextInput placeholder="Enter Character ideals" 
+                    style={styles.input}
                     onChangeText={text => setIdeals(text)}
                     value={ideals}
                 />
                 <TextInput placeholder="Enter Character links" 
+                    style={styles.input}
                     onChangeText={text => setLinks(text)}
                     value={links}
                 />
                 <TextInput placeholder="Enter Character defaults" 
+                    style={styles.input}
                     onChangeText={text => setDefaults(text)}
                     value={defaults}
                 />
                 <TextInput placeholder="Enter Character description" 
+                    style={styles.input}
                     onChangeText={text => setDescription(text)}
                     value={description}
                 />
             </View>
             <View>
-                <Button title="Submit data" onPress={sendFormData} />
+                <Button onPress={sendFormData}>Validation des données</Button>
             </View>
         </View>
     )
@@ -81,6 +89,14 @@ export default function DescriptionForm(props) {
 
 const styles = StyleSheet.create({
     container: {
-      backgroundColor:'#FFF',
+      backgroundColor: 'rgba(0,125,125,0.8)'
+    },
+    input: {
+        backgroundColor: '#FFF',
+        padding: 5,
+        height: 40,
+        margin: 12,
+        borderWidth: 1,
+        borderRadius: 10
     },
   });
