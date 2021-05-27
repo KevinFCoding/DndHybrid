@@ -27,7 +27,7 @@ export default function DescriptionForm(props) {
             "defaults":defaults,
             "description":description,
         }
-        props.setIsModalVisible(false);
+        props.setIsFormModalVisible(false);
         props.setCharacterData(data);
     }
 

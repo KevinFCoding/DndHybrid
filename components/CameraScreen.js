@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
 import { Camera } from 'expo-camera';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -23,51 +23,50 @@ export default function CameraScreen(props) {
   }
   return (
     <View style={styles.container}>
-      <Camera style={styles.container} type={type} ref={ref => {setCameraRef(ref);}}>
+      <Camera style={styles.camera} type={type} ref={ref => {setCameraRef(ref);}}>
         <View style={styles.buttonPlacement}>
-          <TouchableOpacity
-            style={styles.flipButton}
-            onPress={() => {
-              setType(
-                type === Camera.Constants.Type.back
-                  ? Camera.Constants.Type.front
-                  : Camera.Constants.Type.back
-              );
-            }}>
+
+            <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => {
+                    props.triggerCamera();
+                }}
+            >
+                <FontAwesome name="close" size={40} color="white" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+                style={styles.flipButton}
+                onPress={() => {
+                    setType(
+                        type === Camera.Constants.Type.back
+                        ? Camera.Constants.Type.front
+                        : Camera.Constants.Type.back
+                    );
+                }}
+            >
             <MaterialCommunityIcons
                 name="camera-switch"
                 style={{ color: "#fff", fontSize: 40}}
             />
-          </TouchableOpacity>
-          <TouchableOpacity style={{alignSelf: 'center'}} onPress={async() => {
-            if(cameraRef){
-              let photo = await cameraRef.takePictureAsync();
-              props.setImageUri(photo.uri)
-              props.triggerCamera();
-              // utilise uri de la photo que je viens de prendre
-              // et a mettre dans une balise image
-            }
-          }}>
-            <View style={{ 
-               borderWidth: 2,
-               borderRadius:50,
-               borderColor: 'white',
-               height: 50,
-               width:50,
-               display: 'flex',
-               justifyContent: 'center',
-               alignItems: 'center'}}
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+                style={{alignSelf: 'center'}} 
+                onPress={async() => {
+                    if(cameraRef){
+                        let photo = await cameraRef.takePictureAsync();
+                        props.setImageUri(photo.uri)
+                        props.triggerCamera();
+                    }
+                }}
             >
-              <View style={{
-                 borderWidth: 2,
-                 borderRadius:50,
-                 borderColor: 'white',
-                 height: 40,
-                 width:40,
-                 backgroundColor: 'white'}} >
-              </View>
-            </View>
-          </TouchableOpacity>
+                <View style={styles.cameraBorder}>
+                    <View style={styles.cameraCircle}>
+                    </View>
+                </View>
+            </TouchableOpacity>
+
         </View>
       </Camera>
     </View>
@@ -75,9 +74,12 @@ export default function CameraScreen(props) {
 }
 
 const styles = StyleSheet.create({
-    container: {
+    container:{
+        flex:1
+    },
+    camera: {
         flex :1,
-
+        width: Dimensions.get('window').width,
     },
     buttonPlacement :{
         flex:2,
@@ -88,6 +90,27 @@ const styles = StyleSheet.create({
         flex: 0,
         alignSelf: 'center',
         marginBottom: 15
+    },
+    cameraCircle: {
+        borderWidth: 2,
+        borderRadius:100,
+        borderColor: 'white',
+        height: 100,
+        width:100,
+        backgroundColor: 'white'
+    },
+    cameraBorder: { 
+        borderWidth: 2,
+        borderRadius:100,
+        borderColor: 'white',
+        height: 110,
+        width:110,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    closeButton: {
+        flex: 1
     }
 
 })

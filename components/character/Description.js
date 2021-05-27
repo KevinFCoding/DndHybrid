@@ -4,6 +4,8 @@ import Modal from 'react-native-modal';
 import DescriptionForm from '../form/DescriptionForm';
 import Button from '../Button';
 import CameraScreen from '../CameraScreen';
+import { FontAwesome } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function Description() {
 
@@ -23,13 +25,32 @@ export default function Description() {
 
     const [imageUri, setImageUri] = useState('https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.searchpng.com%2Fwp-content%2Fuploads%2F2019%2F02%2FCamera-Icon-PNG.png&f=1&nofb=1');
     const [isCameraVisible, setIsCameraVisible] = useState(false);
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const toggleModal = () => {
-        setIsModalVisible(!isModalVisible);
+    const [isFormModalVisible, setIsFormModalVisible] = useState(false);
+    const [isImageModalVisible, setIsImageModalVisible] = useState(false);
+
+    const toggleFormModal = () => {
+        setIsFormModalVisible(!isFormModalVisible);
     };
+
+    const toggleImageModal = () => {
+        setIsImageModalVisible(!isImageModalVisible);
+    }
 
     const triggerCamera = () => {
         setIsCameraVisible(!isCameraVisible);
+    }
+
+    const pickImage = async () => {
+        try{
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            });
+            setImageUri(result.uri);
+        } catch {
+            console.log("Aucune image selectionnée");
+        }
+        
+        toggleImageModal();
     }
 
     if(isCameraVisible){
@@ -57,9 +78,25 @@ export default function Description() {
                             <Text>{character.sex}</Text>
                         </View>
                         <View>
-                            <TouchableOpacity onPress={triggerCamera}>
+                            <TouchableOpacity onPress={toggleImageModal}>
                                 <Image source={{uri: imageUri,}} style={styles.image}/>
                             </TouchableOpacity>
+                            <Modal
+                                isVisible={isImageModalVisible} styles={styles.box}>
+                                <View>
+                                    <View style={styles.modalImage}>
+                                        <TouchableOpacity onPress={pickImage}>
+                                            <FontAwesome name="files-o" size={50} color="black" />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={triggerCamera}>
+                                            <FontAwesome name="camera" size={50} color="black"/>
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View>
+                                        <Button onPress={toggleImageModal}>Quitter la modale</Button>
+                                    </View>
+                                </View>
+                            </Modal>
                         </View>
                     </View>
                 </View>
@@ -83,11 +120,11 @@ export default function Description() {
                     <Text style={styles.text}>Description/bio du personnage</Text>
                     <Text>{character.description}</Text>
                 </View>
-                <Button onPress={toggleModal}>Modifier fiche personnage</Button>
+                <Button onPress={toggleFormModal}>Modifier fiche personnage</Button>
                 <Modal
-                    isVisible={isModalVisible}>
+                    isVisible={isFormModalVisible}>
                     <View>
-                        <DescriptionForm setCharacterData={setCharacter} setIsModalVisible={setIsModalVisible} character={character}/>
+                        <DescriptionForm setCharacterData={setCharacter} setIsFormModalVisible={setIsFormModalVisible} character={character}/>
                     </View>
                 </Modal>
             </View>
@@ -136,5 +173,12 @@ const styles = StyleSheet.create({
         height:100,
         width:100,
         borderRadius: 50
+    },
+    modalImage: {
+        flexDirection:'row',
+        backgroundColor: 'rgba(0,125,125,1)', 
+        justifyContent: 'space-evenly', 
+        paddingTop:20, 
+        paddingBottom:20
     }
   });
