@@ -34,7 +34,6 @@ export default function Sheet(props) {
                         selectedValue={props.selectedClass}
                         onValueChange={(e) => {
                             classSelected(e);
-                            getHp();
                         }}>
                         {props.classes.map((item, index) => {
                             return (<Picker.Item label={item} value={index} key={index}/>)
@@ -124,7 +123,7 @@ export default function Sheet(props) {
                             text => {
                                 textInputToString = text.toString();
                                 props.setStats.strength(textInputToString);
-                                getModifier(textInputToString, "str");
+                                setModifier(textInputToString, "str");
                             }
                         }
                         value={props.characterStats.strength}
@@ -141,7 +140,7 @@ export default function Sheet(props) {
                             text => {
                                 textInputToString = text.toString();
                                 props.setStats.dexterity(textInputToString);
-                                getModifier(textInputToString, "dex");
+                                setModifier(textInputToString, "dex");
                             }
                         }
                         value={props.characterStats.dexterity}
@@ -159,7 +158,7 @@ export default function Sheet(props) {
                                 textInputToString = text.toString();
                                 props.setStats.constitution(textInputToString);
                                 getHp();
-                                getModifier(textInputToString, "con");
+                                setModifier(textInputToString, "con");
                             }
                         }
                         value={props.characterStats.constitution}
@@ -176,7 +175,7 @@ export default function Sheet(props) {
                             text => {
                                 textInputToString = text.toString();
                                 props.setStats.intelligence(textInputToString);
-                                getModifier(textInputToString, "int");
+                                setModifier(textInputToString, "int");
                             }
                         }
                         value={props.characterStats.intelligence}
@@ -193,7 +192,7 @@ export default function Sheet(props) {
                             text => {
                                 textInputToString = text.toString();
                                 props.setStats.wisdom(textInputToString);
-                                getModifier(textInputToString, "wis");
+                                setModifier(textInputToString, "wis");
                                 updatePP();
                             }
                         }
@@ -210,7 +209,7 @@ export default function Sheet(props) {
                             text => {
                                 textInputToString = text.toString();
                                 props.setStats.charisma(textInputToString);
-                                getModifier(textInputToString, "cha");
+                                setModifier(textInputToString, "cha");
                             }
                         }
                         value={props.characterStats.charisma}
@@ -225,7 +224,7 @@ export default function Sheet(props) {
             <View>
                 <Button onPress={rollDicesForStats}>Roll stats</Button>
             </View>
-            <View style={[styles.healthBox, styles.column]}>
+            <View style={[styles.healthBox]}>
                 <View>
                     <Text>max Hp : {characterHp}</Text>
                     <TextInput
@@ -238,7 +237,7 @@ export default function Sheet(props) {
                     />
                 </View>
             </View>
-            <View style={[styles.deathBox, styles.column]}>
+            <View style={[styles.deathBox]}>
                 <View>
                     <Text>max Hp : {characterHp}</Text>
                     <TextInput
@@ -250,49 +249,68 @@ export default function Sheet(props) {
                         value={characterCurrentHp}
                     />
                 </View>
+            </View>
+            <View style={[styles.skills, styles.column]}>
+                {props.skills.map((item, index) => {
+                    return (
+                        <View style={[styles.column, styles.skills]} label={item} value={index} key={index}>
+                            <Text>{item}</Text>
+                    </View>
+                    )
+                })}
             </View>
         </ScrollView>
     )
 
     function getHp(){
         let totalHp = parseInt(props.characterModifier.constitution);
-        console.log(totalHp + 5);
-
         switch (props.selectedClass){
             case 0: // Barbarian
                 totalHp = (12 + totalHp);
+                break;
             case 1: // Bard
-                totalHp =8+totalHp
+                totalHp =8 + totalHp
+                break;
             case 2: // Clerc
-                totalHp = 8+totalHp
+                totalHp = 8 + totalHp
+                break;
             case 3: // Druid
                 totalHp =10 + totalHp
+                break;
             case 4: // Fighter
-                totalHp = 10+totalHp
+                totalHp = 10 + totalHp
+                break;
             case 5: // Barbarian
-                totalHp= 8+totalHp
+                totalHp= 8 + totalHp
+                break;
             case 6: // Barbarian
-                totalHp =10+totalHp
+                totalHp =10 + totalHp
+                break;
             case 7: // Barbarian
-                totalHp = 10+totalHp
+                totalHp = 10 + totalHp
+                break;
             case 8: // Barbarian
-                totalHp = 8+totalHp
+                totalHp = 8 + totalHp
+                break;
             case 9: // Barbarian
-                totalHp = 6+totalHp
+                totalHp = 6 + totalHp
+                break;
             case 10: // Barbarian
-                totalHp =8+totalHp
+                totalHp =8 + totalHp
+                break;
             case 11: // Wizard
                 totalHp = 6+totalHp
+                break;
             default:
-                totalHp = 8+totalHp
+               throw new Error("No class Selected");
+               break;
         }
         setCharacterHp(totalHp);
     }
 
     function updatePP() {
+        getModifier('wis');
         let basePP = 10 + props.characterModifier.wisdom;
-        console.log(basePP);
-        console.log(typeof basePP);
         props.setPP(basePP.toString());
     }
 
@@ -310,7 +328,7 @@ export default function Sheet(props) {
         }
         console.log(props.proficiencyBonus);
     }
-    function getModifier(statNumber, stat) {
+    function setModifier(statNumber, stat) {
         let statModifier = myModifier(statNumber);
         switch (stat) {
             case "str" :
@@ -331,8 +349,30 @@ export default function Sheet(props) {
             case "cha":
                 props.setStatsModifier.charisma(statModifier);
                 break;
+            default:
+                throw new Error("Unvalid State Type " + stat);
         }
     }
+
+    function getModifier(stat) {
+        switch (stat) {
+            case "str" :
+                return props.characterModifier.strength;
+            case "dex":
+                return props.characterModifier.dexterity;
+            case "con":
+                return props.characterModifier.constitution;
+            case "int":
+                return props.characterModifier.intelligence;
+            case "wis":
+                return props.characterModifier.wisdom;
+            case "cha":
+                return props.characterModifier.charisma;
+            default:
+                throw new Error("Unvalid State Type " + stat);
+        }
+    }
+
 
     function rollDicesForStats() {
         let number = 0;
@@ -357,6 +397,7 @@ export default function Sheet(props) {
 
     function classSelected(classDnd) {
         props.setSelectedClass(classDnd);
+        getHp();
     }
 
     function raceSelected(raceDnd) {
