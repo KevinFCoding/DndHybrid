@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, TextInput, Picker, Dimensions, ScrollView} from "react-native";
+import {StyleSheet, Text, View, TextInput, Picker, Dimensions, ScrollView, CheckBox} from "react-native";
 import Button from '../Button'
 import React, {useState, useEffect} from 'react';
 import axios from "axios";
@@ -12,6 +12,13 @@ export default function Sheet(props) {
     const [characterAC, setCharacterAC] = useState("10");
     const [characterSpeed, setCharacterSpeed] = useState("0");
     const [rolledStats, setRolledStats] = useState([]);
+    //Death Saves
+    const [deathFirstSuccess, setFirstSuccess] = useState(false);
+    const [deathSecondSuccess, setSecondSuccess] = useState(false);
+    const [deathThirdSuccess, setThirdSuccess] = useState(false);
+    const [deathFirstFailure, setFirstFailure] = useState(false);
+    const [deathSecondFailure, setSecondFailure] = useState(false);
+    const [deathThirdFailure, setThirdFailure] = useState(false);
 
     return (
         // NAME
@@ -219,35 +226,64 @@ export default function Sheet(props) {
                 </View>
             </View>
             <View>
-                <Text>You rolled: {rolledStats[0]}, {rolledStats[1]}, {rolledStats[2]}, {rolledStats[3]}, {rolledStats[4]}, {rolledStats[5]}</Text>
+                <Text>You
+                    rolled: {rolledStats[0]}, {rolledStats[1]}, {rolledStats[2]}, {rolledStats[3]}, {rolledStats[4]}, {rolledStats[5]}</Text>
             </View>
             <View>
                 <Button onPress={rollDicesForStats}>Roll stats</Button>
             </View>
-            <View style={[styles.healthBox]}>
-                <View>
-                    <Text>max Hp : {characterHp}</Text>
-                    <TextInput
-                        onChangeText={
-                            text => {
-                                setCharacterCurrentHp(text);
+            <View style={styles.container}>
+                <View style={[styles.healthBox]}>
+                    <View>
+                        <Text>max Hp : {characterHp}</Text>
+                        <TextInput
+                            onChangeText={
+                                text => {
+                                    setCharacterCurrentHp(text);
+                                }
                             }
-                        }
-                        value={characterCurrentHp}
-                    />
+                            value={characterCurrentHp}
+                        />
+                    </View>
                 </View>
-            </View>
-            <View style={[styles.deathBox]}>
-                <View>
-                    <Text>max Hp : {characterHp}</Text>
-                    <TextInput
-                        onChangeText={
-                            text => {
-                                setCharacterCurrentHp(text);
-                            }
-                        }
-                        value={characterCurrentHp}
-                    />
+                <View style={styles.deathBox}>
+                    <Text>Deaths saving throws</Text>
+                    <View style={styles.checkbox}>
+                        <Text>Success</Text>
+                        <CheckBox
+                            value={deathFirstSuccess}
+                            onValueChange={setFirstSuccess}
+                            style={styles.checkbox}
+                        />
+                        <CheckBox
+                            value={deathSecondSuccess}
+                            onValueChange={setSecondSuccess}
+                            style={styles.checkbox}
+                        />
+                        <CheckBox
+                            value={deathThirdSuccess}
+                            onValueChange={setThirdSuccess}
+                            style={styles.checkbox}
+                        />
+                    </View>
+                    <View style={styles.checkbox}>
+                        <Text>Failure</Text>
+                        <CheckBox
+                            value={deathFirstFailure}
+                            onValueChange={setFirstFailure}
+                            style={[styles.checkbox]}
+                        />
+                        <CheckBox
+                            value={deathSecondFailure}
+                            onValueChange={setSecondFailure}
+                            style={styles.checkbox}
+                        />
+                        <CheckBox
+                            value={deathThirdFailure}
+                            onValueChange={setThirdFailure}
+                            style={styles.checkbox}
+                        />
+                    </View>
                 </View>
             </View>
             <View style={[styles.skills, styles.column]}>
@@ -255,36 +291,36 @@ export default function Sheet(props) {
                     return (
                         <View style={[styles.column, styles.skills]} label={item} value={index} key={index}>
                             <Text>{item}</Text>
-                    </View>
+                        </View>
                     )
                 })}
             </View>
         </ScrollView>
     )
 
-    function getHp(){
+    function getHp() {
         let totalHp = parseInt(props.characterModifier.constitution);
-        switch (props.selectedClass){
+        switch (props.selectedClass) {
             case 0: // Barbarian
                 totalHp = (12 + totalHp);
                 break;
             case 1: // Bard
-                totalHp =8 + totalHp
+                totalHp = 8 + totalHp
                 break;
             case 2: // Clerc
                 totalHp = 8 + totalHp
                 break;
             case 3: // Druid
-                totalHp =10 + totalHp
+                totalHp = 10 + totalHp
                 break;
             case 4: // Fighter
                 totalHp = 10 + totalHp
                 break;
             case 5: // Barbarian
-                totalHp= 8 + totalHp
+                totalHp = 8 + totalHp
                 break;
             case 6: // Barbarian
-                totalHp =10 + totalHp
+                totalHp = 10 + totalHp
                 break;
             case 7: // Barbarian
                 totalHp = 10 + totalHp
@@ -296,14 +332,14 @@ export default function Sheet(props) {
                 totalHp = 6 + totalHp
                 break;
             case 10: // Barbarian
-                totalHp =8 + totalHp
+                totalHp = 8 + totalHp
                 break;
             case 11: // Wizard
-                totalHp = 6+totalHp
+                totalHp = 6 + totalHp
                 break;
             default:
-               throw new Error("No class Selected");
-               break;
+                throw new Error("No class Selected");
+                break;
         }
         setCharacterHp(totalHp);
     }
@@ -315,19 +351,20 @@ export default function Sheet(props) {
     }
 
     function lvlUp() {
-        if (props.characterLvl < 5){
+        if (props.characterLvl < 5) {
             props.setProficiencyBonus("2");
-        } else if(props.characterLvl >= 5 && props.characterLvl < 9) {
+        } else if (props.characterLvl >= 5 && props.characterLvl < 9) {
             props.setProficiencyBonus("3");
-        } else if(props.characterLvl >= 9 && props.characterLvl < 13) {
+        } else if (props.characterLvl >= 9 && props.characterLvl < 13) {
             props.setProficiencyBonus("4");
-        } else if(props.characterLvl >= 13 && props.characterLvl < 17) {
+        } else if (props.characterLvl >= 13 && props.characterLvl < 17) {
             props.setProficiencyBonus("5");
-        } else if(props.characterLvl >= 17) {
+        } else if (props.characterLvl >= 17) {
             props.setProficiencyBonus("6");
         }
         console.log(props.proficiencyBonus);
     }
+
     function setModifier(statNumber, stat) {
         let statModifier = myModifier(statNumber);
         switch (stat) {
@@ -377,7 +414,7 @@ export default function Sheet(props) {
     function rollDicesForStats() {
         let number = 0;
         let diceArray = [];
-        while (rolledStats.length > 0 ) {
+        while (rolledStats.length > 0) {
             rolledStats.pop();
         }
         for (let i = 0; i < 6; i++) {
@@ -466,18 +503,41 @@ export default function Sheet(props) {
 
 
 const styles = StyleSheet.create({
+    checkbox: {
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: 'row'
+    },
     centerStat: {
         textAlign: 'center',
         fontSize: 20
     },
-    picker: {
-        backgroundColor:'white',
+    container: {
+        width: Dimensions.get('window').width - 30,
+        backgroundColor: 'white',
         borderWidth: 2,
         paddingTop: 3,
-        paddingBottom:3,
+        paddingBottom: 3,
         margin: 2,
         borderColor: 'black',
-        width: "100%",
+        shadowOffset: {
+            width: 0,
+            height: 5,
+        },
+        shadowOpacity: 0.34,
+        shadowRadius: 6.27,
+
+        elevation: 10,
+    },
+    picker: {
+        backgroundColor: 'white',
+        borderWidth: 2,
+        paddingTop: 3,
+        paddingBottom: 3,
+        margin: 2,
+        borderColor: 'black',
+        borderRadius: 8,
+        width: Dimensions.get('window').width - 45,
         height: 40,
         shadowOffset: {
             width: 0,
@@ -495,7 +555,8 @@ const styles = StyleSheet.create({
     },
     box: {
         margin: 3,
-        width: '33%',
+        justifyContent: "space-evenly",
+        width: '31%',
         padding: 5,
         backgroundColor: 'white',
         borderRadius: 8,
@@ -542,16 +603,38 @@ const styles = StyleSheet.create({
 
     },
     healthBox: {
-        width: '48%',
-        height: '20%',
-        borderWidth: 1,
-        margin: 3
+        width: Dimensions.get('window').width - 38,
+        backgroundColor: 'white',
+        borderWidth: 2,
+        paddingTop: 3,
+        paddingBottom: 3,
+        margin: 2,
+        borderColor: 'black',
+        shadowOffset: {
+            width: 0,
+            height: 5,
+        },
+        shadowOpacity: 0.34,
+        shadowRadius: 6.27,
+
+        elevation: 10,
     },
     deathBox: {
-        width: '48%',
-        height: '20%',
-        borderWidth: 1,
-        margin: 3
+        width: Dimensions.get('window').width - 38,
+        backgroundColor: 'white',
+        borderWidth: 2,
+        paddingTop: 3,
+        paddingBottom: 3,
+        margin: 2,
+        borderColor: 'black',
+        shadowOffset: {
+            width: 0,
+            height: 5,
+        },
+        shadowOpacity: 0.34,
+        shadowRadius: 6.27,
+
+        elevation: 10,
     },
     savesBox: {},
     gearBox: {},

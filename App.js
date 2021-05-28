@@ -12,6 +12,7 @@ import {ActivityIndicator, StyleSheet, Dimensions, Text} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import axios from 'axios';
 import {useEffect, useState} from "react";
+import Ionicons from '@expo/vector-icons';
 
 export default function App() {
 
@@ -35,7 +36,7 @@ export default function App() {
     const [characterName, setCharacterName] = useState('');
     const [characterLvl, setCharacterLvl] = useState("1");
     const [proficiencyBonus, setProficiencyBonus] = useState();
-    const [selectedClass, setSelectedClass] = useState('');
+    const [selectedClass, setSelectedClass] = useState('Barbarian');
     const [selectedRace, setSelectedRace] = useState('');
     const [selectedBackground, setSelectedBackground] = useState('');
 
@@ -59,6 +60,7 @@ export default function App() {
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
+    // Stats objets for Props
     const stats = {
         strength: strength,
         dexterity: dexterity,
@@ -93,6 +95,7 @@ export default function App() {
         charisma: setCharismaModifier
     }
 
+    // All Api called are done because they will be needed in infants
     useEffect(() => {
         const fetchUrl = async () => {
             try {
@@ -154,7 +157,7 @@ export default function App() {
                     let PP = parseInt(wisdomModifier) + 10;
                     setCharacterPassivePerception(PP);
                     setIsLoading(false);
-                }, 3000)
+                }, 1500)
             } catch (err) {
                 setError(err.message)
                 setIsLoading(false)
@@ -169,6 +172,7 @@ export default function App() {
                 <StatusBar style="auto"/>
                 {isLoading ?
                     <Text>LOADING....</Text> :
+
                     <Tab.Navigator>
                         <Tab.Screen name="Sheet">
                             {(props) =>
