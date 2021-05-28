@@ -18,6 +18,7 @@ export default function App() {
 
     const Tab = createBottomTabNavigator();
 
+    //Character stats & modifier
     const [strength, setStrength] = useState("10");
     const [strengthModifier, setStrengthModifier] = useState("0");
     const [dexterity, setDexterity] = useState("10");
@@ -31,16 +32,22 @@ export default function App() {
     const [charisma, setCharisma] = useState("10");
     const [charismaModifier, setCharismaModifier] = useState("0");
 
-    const [characterName, setCharacterName] = useState('WESHALORS');
+    //Character name, proficiency, race, class, background & lvl
+    const [characterName, setCharacterName] = useState('Character Name');
     const [characterLvl, setCharacterLvl] = useState('1');
     const [proficiencyBonus, setProficiencyBonus] = useState('2')
     const [selectedClass, setSelectedClass] = useState('');
     const [selectedRace, setSelectedRace] = useState('');
     const [selectedBackground, setSelectedBackground] = useState('');
 
+    //CLasses, Races & Backgrounds Lists
     const [classesList, setClassesList] = useState([]);
     const [racesList, setRacesList] = useState([]);
     const [backgroundList, setBackgroundsList] = useState([]);
+
+    // Equipment
+    const [weaponsList, setWeaponsList] = useState([]);
+    const [armorsList, setArmorsList] = useState([]);
 
     const [error, setError] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
@@ -79,14 +86,10 @@ export default function App() {
         charisma: setCharismaModifier
     }
 
-    switch (characterLvl) {
-        case characterLvl < 5 :
-            setProficiencyBonus(2);
-    }
-
     useEffect(() => {
         const fetchUrl = async () => {
             try {
+                //All classes, backgrounds & races
                 const resClasses = await axios.get(`https://www.dnd5eapi.co/api/classes`);
                 const resRaces = await axios.get(`https://www.dnd5eapi.co/api/races`);
                 const resBackgrounds = await axios.get(`https://www.dnd5eapi.co/api/backgrounds`);
@@ -97,23 +100,53 @@ export default function App() {
                 const racesNames = [];
                 const backgroundNames = [];
 
-                classDatas.forEach(e => {
+                classDatas.map(e => {
                     classesNames.push(e.name);
                 });
-                racesDatas.forEach(e => {
+                racesDatas.map(e => {
                     racesNames.push(e.name);
                 });
-                backgroundsDatas.forEach(e => {
+                backgroundsDatas.map(e => {
                     backgroundNames.push(e.name);
                 });
+
+                //Equipments
+
+                const resWeapons = await axios.get('https://www.dnd5eapi.co/api/equipment-categories/weapon');
+                const weaponsData = resWeapons.data.equipment;
+                const weapons = [];
+                const resArmor = await axios.get('https://www.dnd5eapi.co/api/equipment-categories/armor');
+                const armorsData = resArmor.data.equipment;
+                const armors = [];
+
+                weaponsData.map(e => {
+                    weapons.push(e.name);
+                });
+                armorsData.map(e => {
+                    armors.push(e.name);
+                })
+
                 setTimeout(() => {
                     setClassesList(classesNames);
                     setRacesList(racesNames);
                     setBackgroundsList(backgroundNames);
+                    setWeaponsList(weapons);
+                    setArmorsList(armors)
                 }, 1000)
             } catch (err) {
                 setError(err.message)
                 setIsLoading(false)
+            }
+            if (characterLvl < 5){
+                setProficiencyBonus(2);
+            } else if(characterLvl >= 5 && characterLvl < 9) {
+                setProficiencyBonus(3);
+            } else if(characterLvl >= 9 && characterLvl < 13) {
+                setProficiencyBonus(4);
+            } else if(characterLvl >= 13 && characterLvl < 17) {
+                setProficiencyBonus(5);
+            } else if(characterLvl >= 17) {
+                setProficiencyBonus(6);
             }
         }
         fetchUrl()

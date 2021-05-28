@@ -1,9 +1,16 @@
 import {StyleSheet, Text, View, TextInput} from "react-native";
 import Button from '../Button'
-import React from 'react';
+import React, {useState} from 'react';
+import Select from 'react-select';
 
 export default function Sheet(props) {
     let textInputToString = '';
+
+    const [characterHp, setCharacterHp] = useState("1");
+    const [characterTempHp, setCharacterTempHp] = useState("0");
+    const [characterAC, setCharacterAC] = useState("10");
+    const [characterSpeed, setCharacterSpeed] = useState("0");
+
     return (
         <View style={styles.column}>
             <View style={props.styles.characterName}>
@@ -19,6 +26,26 @@ export default function Sheet(props) {
             </View>
             <View style={styles.row}>
                 <View style={styles.box}>
+                    <Text>AC</Text>
+                    <Text>{characterAC}</Text>
+                </View>
+                <View style={styles.box}>
+                    <Text>Speed</Text>
+                    <TextInput
+                        onChangeText={
+                            text => {
+                                textInputToString = text.toString();
+                                setCharacterSpeed(textInputToString);
+                            }
+                        }
+                        value={characterSpeed + 'm'}
+                    />
+                </View>
+            </View>
+            <View style={styles.row}>
+            </View>
+            <View style={styles.row}>
+                <View style={styles.statsBox}>
                     <Text style={styles.center}>STR</Text>
                     <Text>{props.characterModifier.strength}</Text>
                     <TextInput
@@ -32,7 +59,7 @@ export default function Sheet(props) {
                         value={props.characterStats.strength}
                     />
                 </View>
-                <View style={styles.box}>
+                <View style={styles.statsBox}>
                     <Text style={styles.center}>DEX</Text>
                     <Text>{props.characterModifier.dexterity}</Text>
                     <TextInput
@@ -46,7 +73,7 @@ export default function Sheet(props) {
                         value={props.characterStats.dexterity}
                     />
                 </View>
-                <View style={styles.box}>
+                <View style={styles.statsBox}>
                     <Text style={styles.center}>CON</Text>
                     <Text>{props.characterModifier.constitution}</Text>
                     <TextInput
@@ -60,7 +87,7 @@ export default function Sheet(props) {
                         value={props.characterStats.constitution}
                     />
                 </View>
-                <View style={styles.box}>
+                <View style={styles.statsBox}>
                     <Text style={styles.center}>INT</Text>
                     <Text>{props.characterModifier.intelligence}</Text>
                     <TextInput
@@ -74,7 +101,7 @@ export default function Sheet(props) {
                         value={props.characterStats.intelligence}
                     />
                 </View>
-                <View style={styles.box}>
+                <View style={styles.statsBox}>
                     <Text style={styles.center}>WIS</Text>
                     <Text>{props.characterModifier.wisdom}</Text>
                     <TextInput
@@ -88,7 +115,7 @@ export default function Sheet(props) {
                         value={props.characterStats.wisdom}
                     />
                 </View>
-                <View style={styles.box}>
+                <View style={styles.statsBox}>
                     <Text style={styles.center}>CHA</Text>
                     <Text>{props.characterModifier.charisma}</Text>
                     <TextInput
@@ -103,6 +130,7 @@ export default function Sheet(props) {
                     />
                 </View>
         </View>
+
         </View>
     )
 
@@ -199,6 +227,12 @@ const styles = StyleSheet.create({
         margin: 0
     },
     box: {
+        width: '30%',
+        height: '100%',
+        borderWidth: 0.5,
+        margin: 2
+    },
+    statsBox: {
         width: '15%',
         height: '100%',
         borderWidth: 1,
