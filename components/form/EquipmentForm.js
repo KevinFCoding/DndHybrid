@@ -14,7 +14,7 @@ export default class App extends PureComponent {
   }
 
   getDataFromApi = async () => {
-    const endpoint = 'https://jsonplaceholder.typicode.com/photos?_limit=20'
+    const endpoint = 'https://www.dnd5eapi.co/api/equipment-categories/weapon'
     const res = await fetch(endpoint)
     const data = await res.json()
     this.setState({items: data})
@@ -23,7 +23,7 @@ export default class App extends PureComponent {
   _renderItem = ({item, index}) => {
     return (
       <TouchableOpacity style={styles.card}>
-      <Text style={styles.cardTitle}>La Hache ! </Text>
+      <Text style={styles.cardTitle}>La Hache !</Text>
       <Text style={styles.cardDesc}> Range : mele</Text>
       <Text style={styles.cardDesc}> Cost : 70</Text>
       <Text style={styles.cardDesc}> Damage : 50</Text>

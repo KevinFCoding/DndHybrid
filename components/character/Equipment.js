@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, Image, View, Button } from "react-native";
 import Modal from 'react-native-modal';
 
+
 const equipment = {
     "Range":"",
     "Cost":"",
@@ -24,8 +25,11 @@ export default function Equipment() {
     };
 
     return (
-        <View >
+        <View>
             <View style={styles.box}>
+                <View> 
+                    <Text style={styles.titre}>Weapons </Text>
+                </View>
                 <View>
                     <Text>Range</Text>
                     <Text>{equipment.range}</Text>
@@ -39,11 +43,26 @@ export default function Equipment() {
                     <Text>{equipment.damage}</Text>
                 </View>
             </View>
-            <Button title="Click here to Modify" onPress={toggleModal} />
+            <Button title="add Weapons" onPress={toggleModal} />
+            <View style={styles.box}>
+                <View>  
+                    <Text style={styles.titre}>Armor</Text>
+                </View>
+                <View>
+                    <Text>Armor Category</Text>
+                    <Text>{equipment.range}</Text>
+                </View>
+                <View>
+                    <Text>Cost</Text>
+                    <Text>{equipment.cost}</Text>
+                </View>
+            </View>
+            
+            <Button title="add Armor" onPress={toggleModal} />
             <Modal
                 isVisible={isModalVisible}>
                 <View>
-                    <DescriptionForm setEquipmentData={setEquipment} setIsModalVisible={setIsModalVisible} equipment={equipment}/>
+               {/*  <EquipmentForm setEquipmentData={setEquipment} setIsModalVisible={setIsModalVisible} equipment={equipment}/> */}
                 </View>
             </Modal>
         </View>
@@ -55,4 +74,12 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       padding:20
     },
+    titre: {
+        textAlign: 'center',
+        fontSize: 20
+    }
   });
+
+
+
+  
