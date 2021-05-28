@@ -43,7 +43,7 @@ export default function Sheet(props) {
                             classSelected(e);
                         }}>
                         {props.classes.map((item, index) => {
-                            return (<Picker.Item label={item} value={index} key={index}/>)
+                            return (<Picker.Item label={item} value={item} key={index}/>)
                         })}
                     </Picker>
                 </View>
@@ -300,46 +300,47 @@ export default function Sheet(props) {
 
     function getHp() {
         let totalHp = parseInt(props.characterModifier.constitution);
-        switch (props.selectedClass) {
-            case 0: // Barbarian
+        console.log(totalHp + 5);
+
+        switch (props.selectedClass){
+            case 'Barbarian': // Barbarian
                 totalHp = (12 + totalHp);
                 break;
-            case 1: // Bard
-                totalHp = 8 + totalHp
+            case 'Bard': // Bard
+                totalHp =8+totalHp
                 break;
-            case 2: // Clerc
-                totalHp = 8 + totalHp
+            case 'Cleric': // Cleric
+                totalHp = 8+totalHp
                 break;
-            case 3: // Druid
-                totalHp = 10 + totalHp
+            case 'Druid': // Druid
+                totalHp =10 + totalHp
                 break;
-            case 4: // Fighter
-                totalHp = 10 + totalHp
+            case 'Fighter': // Fighter
+                totalHp = 10+totalHp
                 break;
-            case 5: // Barbarian
-                totalHp = 8 + totalHp
+            case 'Monk': // Monk
+                totalHp= 8+totalHp
                 break;
-            case 6: // Barbarian
-                totalHp = 10 + totalHp
+            case 'Paladin': // Paladin
+                totalHp =10+totalHp
                 break;
-            case 7: // Barbarian
-                totalHp = 10 + totalHp
+            case 'Ranger': // Ranger
+                totalHp = 10+totalHp
                 break;
-            case 8: // Barbarian
-                totalHp = 8 + totalHp
+            case 'Rogue': // Rogue
+                totalHp = 8+totalHp
                 break;
-            case 9: // Barbarian
-                totalHp = 6 + totalHp
+            case 'Sorcerer': // Sorcerer
+                totalHp = 6+totalHp
                 break;
-            case 10: // Barbarian
-                totalHp = 8 + totalHp
+            case 'Warlock': // Warlock
+                totalHp =8+totalHp
                 break;
-            case 11: // Wizard
-                totalHp = 6 + totalHp
+            case 'Wizard': // Wizard
+                totalHp = 6+totalHp
                 break;
             default:
                 throw new Error("No class Selected");
-                break;
         }
         setCharacterHp(totalHp);
     }

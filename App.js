@@ -5,14 +5,13 @@ import Skills from './components/character/Skills';
 import Equipment from './components/character/Equipment';
 import Spells from './components/character/Spells';
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {StyleSheet, Dimensions, Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {ActivityIndicator, StyleSheet, Dimensions, Text} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import axios from 'axios';
-import {useEffect, useState} from "react";
-import Ionicons from '@expo/vector-icons';
+
 
 export default function App() {
 

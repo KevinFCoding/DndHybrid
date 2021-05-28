@@ -11,7 +11,7 @@ export default function Bio(props) {
 
     const [character, setCharacter] = useState(
         {
-            "name": "",
+            "name": props.characterName,
             "size": "",
             "age": "",
             "sex": "",
