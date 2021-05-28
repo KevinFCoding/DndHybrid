@@ -7,7 +7,7 @@ import CameraScreen from '../CameraScreen';
 import { FontAwesome } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 
-export default function Description() {
+export default function Description(props) {
 
     const [character, setCharacter] = useState(
         {
@@ -58,12 +58,12 @@ export default function Description() {
     }
     else {
         return (
-            <View >
+            <View>
                 <View style={styles.box}>
                     <View style={styles.row}>
                         <View style={styles.bigRow}>
                             <Text style={styles.text}>Nom du joueur</Text>
-                            <Text>{character.name}</Text>
+                            <Text>{props.characterName}</Text>
                         </View>
                         <View style={styles.smallRow}>
                             <Text style={styles.text}>Taille</Text>
