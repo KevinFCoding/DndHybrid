@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, Image, View, Dimensions, TouchableOpacity } from "react-native";
+import React, {useState} from 'react';
+import {StyleSheet, Text, Image, View, Dimensions, TouchableOpacity} from "react-native";
 import Modal from 'react-native-modal';
 import DescriptionForm from '../form/DescriptionForm';
 import Button from '../Button';
 import CameraScreen from '../CameraScreen';
-import { FontAwesome } from '@expo/vector-icons';
+import {FontAwesome} from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 
-export default function Description() {
+export default function Bio(props) {
 
     const [character, setCharacter] = useState(
         {
-            "name":"",
-            "size":"",
-            "age":"",
-            "sex":"",
-            "personnality":"",
-            "ideals":"",
-            "links":"",
-            "defaults":"",
-            "description":"",
+            "name": "",
+            "size": "",
+            "age": "",
+            "sex": "",
+            "personnality": "",
+            "ideals": "",
+            "links": "",
+            "defaults": "",
+            "description": "",
         }
     );
 
@@ -41,7 +41,7 @@ export default function Description() {
     }
 
     const pickImage = async () => {
-        try{
+        try {
             let result = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
             });
@@ -49,21 +49,19 @@ export default function Description() {
         } catch {
             console.log("Aucune image selectionnée");
         }
-        
+
         toggleImageModal();
     }
-
-    if(isCameraVisible){
+    if (isCameraVisible) {
         return (<CameraScreen setImageUri={setImageUri} triggerCamera={triggerCamera}></CameraScreen>);
-    }
-    else {
+    } else {
         return (
-            <View >
+            <View>
                 <View style={styles.box}>
                     <View style={styles.row}>
                         <View style={styles.bigRow}>
                             <Text style={styles.text}>Nom du joueur</Text>
-                            <Text>{character.name}</Text>
+                            <Text>{props.characterName}</Text>
                         </View>
                         <View style={styles.smallRow}>
                             <Text style={styles.text}>Taille</Text>
@@ -86,7 +84,7 @@ export default function Description() {
                                 <View>
                                     <View style={styles.modalImage}>
                                         <TouchableOpacity onPress={pickImage}>
-                                            <FontAwesome name="files-o" size={50} color="black" />
+                                            <FontAwesome name="files-o" size={50} color="black"/>
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={triggerCamera}>
                                             <FontAwesome name="camera" size={50} color="black"/>
@@ -124,13 +122,18 @@ export default function Description() {
                 <Modal
                     isVisible={isFormModalVisible}>
                     <View>
-                        <DescriptionForm setCharacterData={setCharacter} setIsFormModalVisible={setIsFormModalVisible} character={character}/>
+                        <DescriptionForm
+                            setCharacterName={props.setCharacterName}
+                            characterName={props.characterName}
+                            setCharacterData={setCharacter}
+                            setIsFormModalVisible={setIsFormModalVisible}
+                            character={character}/>
                     </View>
                 </Modal>
             </View>
         );
     }
-    
+
 }
 
 const styles = StyleSheet.create({
@@ -140,7 +143,7 @@ const styles = StyleSheet.create({
         padding: 15,
         backgroundColor: 'white',
         borderRadius: 8,
-        borderWidth:2,
+        borderWidth: 2,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -152,15 +155,15 @@ const styles = StyleSheet.create({
         elevation: 10,
     },
     row: {
-        flexDirection:'row',
+        flexDirection: 'row',
     },
     smallRow: {
-        flexBasis:'auto',
+        flexBasis: 'auto',
         flexShrink: 1,
         flexGrow: 0
     },
     bigRow: {
-        flexBasis:'auto',
+        flexBasis: 'auto',
         flexGrow: 1,
         flexShrink: 0
     },
@@ -170,15 +173,19 @@ const styles = StyleSheet.create({
         borderWidth: 1
     },
     image: {
-        height:100,
-        width:100,
+        height: 100,
+        width: 100,
         borderRadius: 50
     },
     modalImage: {
-        flexDirection:'row',
-        backgroundColor: 'rgba(0,125,125,1)', 
-        justifyContent: 'space-evenly', 
-        paddingTop:20, 
-        paddingBottom:20
+        flexDirection: 'row',
+        backgroundColor: 'rgba(0,125,125,1)',
+        justifyContent: 'space-evenly',
+        paddingTop: 20,
+        paddingBottom: 20
+    },
+    test: {
+        color: 'black'
     }
-  });
+
+});
