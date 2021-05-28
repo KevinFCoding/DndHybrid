@@ -8,11 +8,14 @@ import Spells from './components/character/Spells';
 import React from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-import {StyleSheet, Image} from 'react-native';
+import {StyleSheet, Image, Dimensions} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import axios from 'axios';
 import {useEffect, useState} from "react";
+import {LoadingIndicator} from "react-select/src/components/indicators";
+import {LoadingMessage} from "react-select/src/components/Menu";
+import AppLoadingPlaceholder from "expo/build/launch/AppLoadingPlaceholder";
 
 export default function App() {
 
@@ -33,9 +36,9 @@ export default function App() {
     const [charismaModifier, setCharismaModifier] = useState("0");
 
     //Character name, proficiency, race, class, background & lvl
-    const [characterName, setCharacterName] = useState('Character Name');
-    const [characterLvl, setCharacterLvl] = useState('1');
-    const [proficiencyBonus, setProficiencyBonus] = useState('2')
+    const [characterName, setCharacterName] = useState('');
+    const [characterLvl, setCharacterLvl] = useState("1");
+    const [proficiencyBonus, setProficiencyBonus] = useState();
     const [selectedClass, setSelectedClass] = useState('');
     const [selectedRace, setSelectedRace] = useState('');
     const [selectedBackground, setSelectedBackground] = useState('');
@@ -48,6 +51,14 @@ export default function App() {
     // Equipment
     const [weaponsList, setWeaponsList] = useState([]);
     const [armorsList, setArmorsList] = useState([]);
+
+    // PP
+    const [characterPassivePerception, setCharacterPassivePerception] = useState("10");
+
+    // Skills
+
+    const [skillsList, setSetSkillList] = useState([]);
+    const [isProficient, setIfProcificient] = useState(false);
 
     const [error, setError] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
@@ -124,6 +135,15 @@ export default function App() {
                 });
                 armorsData.map(e => {
                     armors.push(e.name);
+                });
+
+                // Skills
+                const resSkills = await axios.get('https://www.dnd5eapi.co/api/skills');
+                const skillsDatas = resSkills.data.results;
+                const skills = [];
+
+                skillsDatas.map(e => {
+                    skills.push(e.name);
                 })
 
                 setTimeout(() => {
@@ -131,28 +151,25 @@ export default function App() {
                     setRacesList(racesNames);
                     setBackgroundsList(backgroundNames);
                     setWeaponsList(weapons);
-                    setArmorsList(armors)
-                }, 1000)
+                    setArmorsList(armors);
+                    setSetSkillList(skills);
+
+                    setProficiencyBonus(2);
+                    let PP = parseInt(wisdomModifier) + 10;
+                    setCharacterPassivePerception(PP);
+                    setIsLoading(false);
+                }, 3000)
             } catch (err) {
                 setError(err.message)
                 setIsLoading(false)
-            }
-            if (characterLvl < 5){
-                setProficiencyBonus(2);
-            } else if(characterLvl >= 5 && characterLvl < 9) {
-                setProficiencyBonus(3);
-            } else if(characterLvl >= 9 && characterLvl < 13) {
-                setProficiencyBonus(4);
-            } else if(characterLvl >= 13 && characterLvl < 17) {
-                setProficiencyBonus(5);
-            } else if(characterLvl >= 17) {
-                setProficiencyBonus(6);
             }
         }
         fetchUrl()
     }, [])
 
     return (
+        isLoading ?
+            <AppLoadingPlaceholder></AppLoadingPlaceholder> :
         <NavigationContainer>
             <SafeAreaView style={styles.safeArea}>
                 <StatusBar style="auto"/>
@@ -166,7 +183,10 @@ export default function App() {
                                     setStatsModifier={setStatsModifier}
                                     characterLvl={characterLvl}
                                     setCharacterLvl={setCharacterLvl}
-
+                                    characterPP = {characterPassivePerception}
+                                    setPP = {setCharacterPassivePerception}
+                                    proficiencyBonus={proficiencyBonus}
+                                    setProficiencyBonus={setProficiencyBonus}
                                     characterName={characterName}
                                     setCharacterName={setCharacterName}
                                     selectedClass={selectedClass}
@@ -178,6 +198,8 @@ export default function App() {
                                     classes={classesList}
                                     races={racesList}
                                     backgrounds={backgroundList}
+                                    skills={skillsList}
+                                    setIfProficient={setIfProcificient}
                                     styles={styles}
                             />}
                     </Tab.Screen>
@@ -235,9 +257,20 @@ const styles = StyleSheet.create({
         flex: 1
     },
     characterName: {
-        width: '95%',
-        alignItems: 'center',
-        margin: 0,
-        borderWidth: 1
+        margin: 5,
+        width: Dimensions.get('window').width -30,
+        padding: 15,
+        backgroundColor: 'white',
+        borderRadius: 8,
+        borderWidth: 2,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 5,
+        },
+        shadowOpacity: 0.34,
+        shadowRadius: 6.27,
+
+        elevation: 10,
     }
 });
