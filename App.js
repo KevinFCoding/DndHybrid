@@ -7,15 +7,11 @@ import Spells from './components/character/Spells';
 
 import React from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-
-import {StyleSheet, Image, Dimensions} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
+import {ActivityIndicator, StyleSheet, Dimensions, Text} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import axios from 'axios';
 import {useEffect, useState} from "react";
-import {LoadingIndicator} from "react-select/src/components/indicators";
-import {LoadingMessage} from "react-select/src/components/Menu";
-import AppLoadingPlaceholder from "expo/build/launch/AppLoadingPlaceholder";
 
 export default function App() {
 
@@ -60,8 +56,8 @@ export default function App() {
     const [skillsList, setSetSkillList] = useState([]);
     const [isProficient, setIfProcificient] = useState(false);
 
-    const [error, setError] = useState(null)
-    const [isLoading, setIsLoading] = useState(true)
+    const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     const stats = {
         strength: strength,
@@ -168,84 +164,85 @@ export default function App() {
     }, [])
 
     return (
-        isLoading ?
-            <AppLoadingPlaceholder></AppLoadingPlaceholder> :
         <NavigationContainer>
             <SafeAreaView style={styles.safeArea}>
                 <StatusBar style="auto"/>
-                <Tab.Navigator>
-                    <Tab.Screen name="Sheet">
-                        {(props) =>
-                            <Sheet  {...props}
-                                    characterStats={stats}
-                                    characterModifier={modifier}
-                                    setStats={setStats}
-                                    setStatsModifier={setStatsModifier}
-                                    characterLvl={characterLvl}
-                                    setCharacterLvl={setCharacterLvl}
-                                    characterPP = {characterPassivePerception}
-                                    setPP = {setCharacterPassivePerception}
-                                    proficiencyBonus={proficiencyBonus}
-                                    setProficiencyBonus={setProficiencyBonus}
-                                    characterName={characterName}
-                                    setCharacterName={setCharacterName}
-                                    selectedClass={selectedClass}
-                                    setSelectedClass={setSelectedClass}
-                                    selectedRace={selectedRace}
-                                    setSelectedRace={setSelectedRace}
-                                    selectedBackground={selectedBackground}
-                                    setSelectedBackground={setSelectedBackground}
-                                    classes={classesList}
-                                    races={racesList}
-                                    backgrounds={backgroundList}
-                                    skills={skillsList}
-                                    setIfProficient={setIfProcificient}
-                                    styles={styles}
-                            />}
-                    </Tab.Screen>
-                    <Tab.Screen name="Bio">
-                    {(props) =>
-                        <Bio  {...props}
-                              characterName={characterName}
-                              setCharacterName={setCharacterName}
-                              selectedBackground={selectedBackground}
-                              styles={styles}
-                        />}
-                    </Tab.Screen>
-                    <Tab.Screen name="Skills">
-                    {(props) =>
-                        <Skills  {...props}
-                                 strength={stats.strength}
-                                 characterName={characterName}
-                                 setCharacterName={setCharacterName}
-                                 selectedClass={selectedClass}
-                                 selectedRace={selectedRace}
-                                 selectedBackground={selectedBackground}
-                                 styles={styles}
-                        />}
-                    </Tab.Screen>
-                    <Tab.Screen name="Equipment">
-                    {(props) =>
-                        <Equipment  {...props}
-                                    characterName={characterName}
-                                    setCharacterName={setCharacterName}
-                                    selectedClass={selectedClass}
-                                    backgrounds={backgroundList}
-                                    styles={styles}
-                        />}
-                    </Tab.Screen>
-                    <Tab.Screen name="Spells">
-                    {(props) =>
-                        <Spells  {...props}
-                                 characterName={characterName}
-                                 setCharacterName={setCharacterName}
-                                 proficiencyBonus={proficiencyBonus}
-                                 characterLvl={characterLvl}
-                                 selectedClass={selectedClass}
-                                 styles={styles}
-                        />}
-                    </Tab.Screen>
-                </Tab.Navigator>
+                {isLoading ?
+                    <Text>LOADING....</Text> :
+                    <Tab.Navigator>
+                        <Tab.Screen name="Sheet">
+                            {(props) =>
+                                <Sheet  {...props}
+                                        characterStats={stats}
+                                        characterModifier={modifier}
+                                        setStats={setStats}
+                                        setStatsModifier={setStatsModifier}
+                                        characterLvl={characterLvl}
+                                        setCharacterLvl={setCharacterLvl}
+                                        characterPP={characterPassivePerception}
+                                        setPP={setCharacterPassivePerception}
+                                        proficiencyBonus={proficiencyBonus}
+                                        setProficiencyBonus={setProficiencyBonus}
+                                        characterName={characterName}
+                                        setCharacterName={setCharacterName}
+                                        selectedClass={selectedClass}
+                                        setSelectedClass={setSelectedClass}
+                                        selectedRace={selectedRace}
+                                        setSelectedRace={setSelectedRace}
+                                        selectedBackground={selectedBackground}
+                                        setSelectedBackground={setSelectedBackground}
+                                        classes={classesList}
+                                        races={racesList}
+                                        backgrounds={backgroundList}
+                                        skills={skillsList}
+                                        setIfProficient={setIfProcificient}
+                                        styles={styles}
+                                />}
+                        </Tab.Screen>
+                        <Tab.Screen name="Bio">
+                            {(props) =>
+                                <Bio  {...props}
+                                      characterName={characterName}
+                                      setCharacterName={setCharacterName}
+                                      selectedBackground={selectedBackground}
+                                      styles={styles}
+                                />}
+                        </Tab.Screen>
+                        <Tab.Screen name="Skills">
+                            {(props) =>
+                                <Skills  {...props}
+                                         strength={stats.strength}
+                                         characterName={characterName}
+                                         setCharacterName={setCharacterName}
+                                         selectedClass={selectedClass}
+                                         selectedRace={selectedRace}
+                                         selectedBackground={selectedBackground}
+                                         styles={styles}
+                                />}
+                        </Tab.Screen>
+                        <Tab.Screen name="Equipment">
+                            {(props) =>
+                                <Equipment  {...props}
+                                            characterName={characterName}
+                                            setCharacterName={setCharacterName}
+                                            selectedClass={selectedClass}
+                                            backgrounds={backgroundList}
+                                            styles={styles}
+                                />}
+                        </Tab.Screen>
+                        <Tab.Screen name="Spells">
+                            {(props) =>
+                                <Spells  {...props}
+                                         characterName={characterName}
+                                         setCharacterName={setCharacterName}
+                                         proficiencyBonus={proficiencyBonus}
+                                         characterLvl={characterLvl}
+                                         selectedClass={selectedClass}
+                                         styles={styles}
+                                />}
+                        </Tab.Screen>
+                    </Tab.Navigator>
+                }
             </SafeAreaView>
         </NavigationContainer>
 
