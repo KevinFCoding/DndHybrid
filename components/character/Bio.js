@@ -7,7 +7,7 @@ import CameraScreen from '../CameraScreen';
 import { FontAwesome } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 
-export default function Description(props) {
+export default function Bio(props) {
 
     const [character, setCharacter] = useState(
         {

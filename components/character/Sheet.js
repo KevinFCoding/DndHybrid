@@ -1,140 +1,104 @@
-import React, { useState, useEffect } from 'react';
-import {StyleSheet, Text, Image, View, Button, TextInput} from "react-native";
-import { App } from '../../App';
-
-const stats = {
-    "Strength":"",
-    "Dexterity":"",
-    "Constitution":"",
-    "Intelligence":"",
-    "Wisdom":"",
-    "Charisma":""
-}
+import {StyleSheet, Text, View, TextInput} from "react-native";
+import React from 'react';
 
 export default function Sheet(props) {
-
-    const [characterName, setCharacterName] = useState("");
-
-    const [strength, setStrength] = useState("10");
-    const [strengthModifier, setStrengthModifier] = useState("0");
-    const [dexterity, setDexterity] = useState("10");
-    const [dexterityModifier, setDexterityModifier] = useState("0");
-
-    const [constitution, setConstitution] = useState("10");
-    const [constitutionModifier, setConstitutionModifier] = useState("0");
-
-    const [intelligence, setIntelligence] = useState("10");
-    const [intelligenceModifier, setIntelligenceModifier] = useState("0");
-
-    const [wisdom, setWisdom] = useState("10");
-    const [wisdomModifier, setWisdomModifier] = useState("0");
-
-    const [charisma, setCharisma] = useState("10");
-    const [charismaModifier, setCharismaModifier] = useState("0");
-
-
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const toggleModal = () => {
-        setIsModalVisible(!isModalVisible);
-    };
     let textInputToString = '';
-
     return (
         <View style={styles.column}>
-            <View style={this.props}>
+            <View style={props.styles.namePc}>
                 <TextInput
                     placeholder='Enter your character name here'
                     onChangeText={
                         text => {
-                            setCharacterName(text);
+                            props.setCharacterName(text);
                         }
                     }
-                    value={characterName}
+                    value={props.characterName}
                 />
             </View>
             <View style={styles.row}>
                 <View style={styles.box}>
                     <Text style={styles.center}>STR</Text>
-                    <Text>{strengthModifier}</Text>
+                    <Text>{props.characterModifier.strength}</Text>
                     <TextInput
                         onChangeText={
                             text => {
                                 textInputToString = text.toString();
-                                setStrength(textInputToString);
+                                props.setStats.strength(textInputToString);
                                 getModifier(textInputToString, "str");
                             }
                         }
-                        value={strength}
+                        value={props.characterStats.strength}
                     />
                 </View>
                 <View style={styles.box}>
                     <Text style={styles.center}>DEX</Text>
-                    <Text>{dexterityModifier}</Text>
+                    <Text>{props.characterModifier.dexterity}</Text>
                     <TextInput
                         onChangeText={
                             text => {
                                 textInputToString = text.toString();
-                                setDexterity(textInputToString);
+                                props.setStats.dexterity(textInputToString);
                                 getModifier(textInputToString, "dex");
                             }
                         }
-                        value={dexterity}
+                        value={props.characterStats.dexterity}
                     />
                 </View>
                 <View style={styles.box}>
                     <Text style={styles.center}>CON</Text>
-                    <Text>{constitutionModifier}</Text>
+                    <Text>{props.characterModifier.constitution}</Text>
                     <TextInput
                         onChangeText={
                             text => {
                                 textInputToString = text.toString();
-                                setConstitution(textInputToString);
+                                props.setStats.constitution(textInputToString);
                                 getModifier(textInputToString, "con");
                             }
                         }
-                        value={constitution}
+                        value={props.characterStats.constitution}
                     />
                 </View>
                 <View style={styles.box}>
                     <Text style={styles.center}>INT</Text>
-                    <Text>{intelligenceModifier}</Text>
+                    <Text>{props.characterModifier.intelligence}</Text>
                     <TextInput
                         onChangeText={
                             text => {
                                 textInputToString = text.toString();
-                                setIntelligence(textInputToString);
+                                props.setStats.intelligence(textInputToString);
                                 getModifier(textInputToString, "int");
                             }
                         }
-                        value={intelligence}
+                        value={props.characterStats.intelligence}
                     />
                 </View>
                 <View style={styles.box}>
                     <Text style={styles.center}>WIS</Text>
-                    <Text>{wisdomModifier}</Text>
+                    <Text>{props.characterModifier.wisdom}</Text>
                     <TextInput
                         onChangeText={
                             text => {
                                 textInputToString = text.toString();
-                                setWisdom(textInputToString);
+                                props.setStats.wisdom(textInputToString);
                                 getModifier(textInputToString, "wis");
                             }
                         }
-                        value={wisdom}
+                        value={props.characterStats.wisdom}
                     />
                 </View>
                 <View style={styles.box}>
                     <Text style={styles.center}>CHA</Text>
-                    <Text>{charismaModifier}</Text>
+                    <Text>{props.characterModifier.charisma}</Text>
                     <TextInput
                         onChangeText={
                             text => {
                                 textInputToString = text.toString();
-                                setCharisma(textInputToString);
+                                props.setStats.charisma(textInputToString);
                                 getModifier(textInputToString, "cha");
                             }
                         }
-                        value={charisma}
+                        value={props.characterStats.charisma}
                     />
                 </View>
         </View>
@@ -142,33 +106,30 @@ export default function Sheet(props) {
     )
 
     function getModifier(statNumber, stat) {
-        console.log("ARE WE HERE YET MOTHERFUCKER");
         let statModifier = myModifier(statNumber);
        switch (stat) {
            case "str" :
-               setStrengthModifier(statModifier);
-               console.log(statModifier)
+               props.setStatsModifier.strength(statModifier);
                break;
            case "dex":
-               setDexterityModifier(statModifier);
+               props.setStatsModifier.dexterity(statModifier);
                break;
            case "con":
-               setConstitutionModifier(statModifier);
+               props.setStatsModifier.constitution(statModifier);
                break;
            case "int":
-               setIntelligenceModifier(statModifier);
+               props.setStatsModifier.intelligence(statModifier);
                break;
            case "wis":
-               setWisdomModifier(statModifier);
+               props.setStatsModifier.wisdom(statModifier);
                break;
            case "cha":
-               setCharismaModifier(statModifier);
+               props.setStatsModifier.charisma(statModifier);
                break;
        }
     }
 
     function myModifier(statNumber) {
-        console.log(statNumber);
         switch (parseInt(statNumber)) {
             case 0 :
             case 1 :

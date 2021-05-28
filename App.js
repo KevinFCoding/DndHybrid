@@ -1,17 +1,42 @@
-import { StatusBar } from 'expo-status-bar';
-import Description from './components/character/Description';
+import {StatusBar} from 'expo-status-bar';
 import Sheet from './components/character/Sheet';
+import Bio from './components/character/Bio';
+import Skills from './components/character/Skills';
+import Equipment from './components/character/Equipment';
+import Spells from './components/character/Spells';
 
 import React from 'react';
-import { StyleSheet, Image } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+
+import {StyleSheet, Image} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import axios from 'axios';
 import {useEffect, useState} from "react";
 
 export default function App() {
 
-  const Tab = createBottomTabNavigator();
+    const Tab = createBottomTabNavigator();
+
+    const [strength, setStrength] = useState("10");
+    const [strengthModifier, setStrengthModifier] = useState("0");
+    const [dexterity, setDexterity] = useState("10");
+    const [dexterityModifier, setDexterityModifier] = useState("0");
+    const [constitution, setConstitution] = useState("10");
+    const [constitutionModifier, setConstitutionModifier] = useState("0");
+    const [intelligence, setIntelligence] = useState("10");
+    const [intelligenceModifier, setIntelligenceModifier] = useState("0");
+    const [wisdom, setWisdom] = useState("10");
+    const [wisdomModifier, setWisdomModifier] = useState("0");
+    const [charisma, setCharisma] = useState("10");
+    const [charismaModifier, setCharismaModifier] = useState("0");
+
+    const [characterName, setCharacterName] = useState([]);
+    const [characterLvl, setCharacterLvl] = useState('1');
+    const [proficiencyBonus, setProficiencyBonus] = useState('2')
+    const [selectedClass, setSelectedClass] = useState('');
+    const [selectedRace, setSelectedRace] = useState('');
+    const [selectedBackground, setSelectedBackground] = useState('');
 
     const [classesList, setClassesList] = useState([]);
     const [racesList, setRacesList] = useState([]);
@@ -19,6 +44,40 @@ export default function App() {
 
     const [error, setError] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
+
+    const stats = {
+        strength :strength ,
+        dexterity: dexterity,
+        constitution : constitution,
+        intelligence :intelligence,
+        wisdom: wisdom ,
+        charisma: charisma
+    }
+    const modifier = {
+        strength :strengthModifier ,
+        dexterity: dexterityModifier,
+        constitution : constitutionModifier,
+        intelligence :intelligenceModifier,
+        wisdom: wisdomModifier,
+        charisma: charismaModifier
+    }
+    const setStats = {
+        strength :setStrength ,
+        dexterity: setDexterity,
+        constitution : setConstitution,
+        intelligence :setIntelligence,
+        wisdom: setWisdom,
+        charisma: setCharisma
+    }
+
+    const setStatsModifier = {
+        strength :setStrengthModifier ,
+        dexterity: setDexterityModifier,
+        constitution : setConstitutionModifier,
+        intelligence :setIntelligenceModifier,
+        wisdom: setWisdomModifier,
+        charisma: setCharismaModifier
+    }
 
     useEffect(() => {
         const fetchUrl = async () => {
@@ -56,28 +115,86 @@ export default function App() {
     }, [])
 
     return (
-      <NavigationContainer>
-        <StatusBar style="auto" />
-        <Tab.Navigator>
-          <Tab.Screen name="Sheet" component={Sheet}/>
-          <Tab.Screen name="Bio" component={Description} />
-          <Tab.Screen name="Skills" component={Description} />
-          <Tab.Screen name="Equipment" component={Description} />
-          <Tab.Screen name="Spells" component={Description} />
-        </Tab.Navigator>
-      </NavigationContainer>
-  );
+        <NavigationContainer>
+            <SafeAreaView style={styles.safeArea}>
+                <StatusBar style="auto"/>
+                <Tab.Navigator>
+                    <Tab.Screen name="Sheet">
+                        {(props) =>
+                            <Sheet  {...props}
+                                    characterStats={stats}
+                                    characterModifier={modifier}
+                                    setStats={setStats}
+                                    setStatsModifier={setStatsModifier}
+                                    characterLvl={characterLvl}
+                                    setCharacterLvl={setCharacterLvl}
+
+                                    characterName={characterName}
+                                    setCharacterName={setCharacterName}
+                                    selectedClass={selectedClass}
+                                    setSelectedClass={setSelectedClass}
+                                    selectedRace={selectedRace}
+                                    setSelectedRace={setSelectedRace}
+                                    selectedBackground={selectedBackground}
+                                    setSelectedBackground={setSelectedBackground}
+                                    classes={classesList}
+                                    races={racesList}
+                                    backgrounds={backgroundList}
+                                    styles={styles}
+                            />}
+                    </Tab.Screen>
+                    <Tab.Screen name="Bio" component={Bio}/>
+                    {(props) =>
+                        <Bio  {...props}
+                                characterName={characterName}
+                                setCharacterName={setCharacterName}
+                                selectedBackground={selectedBackground}
+                                styles={styles}
+                        />}
+                    <Tab.Screen name="Skills" component={Skills}/>
+                    {(props) =>
+                        <Skills  {...props}
+                                strength = {stats.strength}
+                                characterName={characterName}
+                                setCharacterName={setCharacterName}
+                                selectedClass={selectedClass}
+                                selectedRace={selectedRace}
+                                selectedBackground={selectedBackground}
+                                styles={styles}
+                        />}
+                    <Tab.Screen name="Equipment" component={Equipment}/>
+                    {(props) =>
+                        <Equipment  {...props}
+                                characterName={characterName}
+                                setCharacterName={setCharacterName}
+                                selectedClass={selectedClass}
+                                backgrounds={backgroundList}
+                                styles={styles}
+                        />}
+                    <Tab.Screen name="Spells" component={Spells}/>
+                    {(props) =>
+                        <Spells  {...props}
+                                characterName={characterName}
+                                setCharacterName={setCharacterName}
+                                characterLvl={characterLvl}
+                                selectedClass={selectedClass}
+                                styles={styles}
+                        />}
+                </Tab.Navigator>
+            </SafeAreaView>
+        </NavigationContainer>
+
+    );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    safeArea: {
+        flex: 1
+    },
     namePc: {
-      width: '100%',
-        borderBottomWidth: 1
+        width: '95%',
+        alignItems: 'center',
+        margin : 0,
+        borderWidth: 1
     }
 });
