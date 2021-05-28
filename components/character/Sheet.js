@@ -37,7 +37,7 @@ export default function Sheet(props) {
                             getHp();
                         }}>
                         {props.classes.map((item, index) => {
-                            return (<Picker.Item label={item} value={index} key={index}/>)
+                            return (<Picker.Item label={item} value={item} key={index}/>)
                         })}
                     </Picker>
                 </View>
@@ -259,29 +259,29 @@ export default function Sheet(props) {
         console.log(totalHp + 5);
 
         switch (props.selectedClass){
-            case 0: // Barbarian
+            case 'Barbarian': // Barbarian
                 totalHp = (12 + totalHp);
-            case 1: // Bard
+            case 'Bard': // Bard
                 totalHp =8+totalHp
-            case 2: // Clerc
+            case 'Cleric': // Cleric
                 totalHp = 8+totalHp
-            case 3: // Druid
+            case 'Druid': // Druid
                 totalHp =10 + totalHp
-            case 4: // Fighter
+            case 'Fighter': // Fighter
                 totalHp = 10+totalHp
-            case 5: // Barbarian
+            case 'Monk': // Monk
                 totalHp= 8+totalHp
-            case 6: // Barbarian
+            case 'Paladin': // Paladin
                 totalHp =10+totalHp
-            case 7: // Barbarian
+            case 'Ranger': // Ranger
                 totalHp = 10+totalHp
-            case 8: // Barbarian
+            case 'Rogue': // Rogue
                 totalHp = 8+totalHp
-            case 9: // Barbarian
+            case 'Sorcerer': // Sorcerer
                 totalHp = 6+totalHp
-            case 10: // Barbarian
+            case 'Warlock': // Warlock
                 totalHp =8+totalHp
-            case 11: // Wizard
+            case 'Wizard': // Wizard
                 totalHp = 6+totalHp
             default:
                 totalHp = 8+totalHp

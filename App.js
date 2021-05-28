@@ -168,8 +168,6 @@ export default function App() {
     }, [])
 
     return (
-        isLoading ?
-            <AppLoadingPlaceholder></AppLoadingPlaceholder> :
         <NavigationContainer>
             <SafeAreaView style={styles.safeArea}>
                 <StatusBar style="auto"/>

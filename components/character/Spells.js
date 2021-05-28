@@ -1,9 +1,11 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View, Dimensions, ScrollView, FlatList, TouchableOpacity, Switch} from "react-native";
+import {StyleSheet, Text, View, Dimensions, ScrollView, FlatList, TouchableOpacity} from "react-native";
 import {FontAwesome} from '@expo/vector-icons';
 import SpellCard from './SpellCard';
 import SpellForm from "../form/SpellForm";
 import Modal from 'react-native-modal';
+import SpellLevelCard from './SpellLevelCard';
+import Button from '../Button';
 
 export default function Spells(props) {
 
@@ -43,62 +45,7 @@ export default function Spells(props) {
     //An array of spells, each item will contains object corresponding to spells
     const [allSpells, setAllSpells] = useState({
         'level0':[],
-        'level1':[{
-            "index": "animal-friendship",
-            "name": "Animal Friendship",
-            "desc": [
-                "This spell lets you convince a beast that you mean it no harm. Choose a beast that you can see within range. It must see and hear you. If the beast's Intelligence is 4 or higher, the spell fails. Otherwise, the beast must succeed on a wisdom saving throw or be charmed by you for the spell's duration. If you or one of your companions harms the target, the spells ends."
-            ],
-            "range": "30 feet",
-            "components": [
-                "V",
-                "S",
-                "M"
-            ],
-            "material": "A morsel of food.",
-            "ritual": false,
-            "duration": "24 hours",
-            "concentration": false,
-            "casting_time": "1 action",
-            "level": 1,
-            "dc": {
-                "dc_type": {
-                    "index": "wis",
-                    "name": "WIS",
-                    "url": "/api/ability-scores/wis"
-                },
-                "dc_success": "none"
-            },
-            "school": {
-                "index": "enchantment",
-                "name": "Enchantment",
-                "url": "/api/magic-schools/enchantment"
-            },
-            "classes": [
-                {
-                    "index": "bard",
-                    "name": "Bard",
-                    "url": "/api/classes/bard"
-                },
-                {
-                    "index": "cleric",
-                    "name": "Cleric",
-                    "url": "/api/classes/cleric"
-                },
-                {
-                    "index": "druid",
-                    "name": "Druid",
-                    "url": "/api/classes/druid"
-                },
-                {
-                    "index": "ranger",
-                    "name": "Ranger",
-                    "url": "/api/classes/ranger"
-                }
-            ],
-            "subclasses": [],
-            "url": "/api/spells/animal-friendship"
-        }],
+        'level1':[],
         'level2':[],
         'level3':[],
         'level4':[],
@@ -117,93 +64,42 @@ export default function Spells(props) {
         setIsFormModalVisible(!isFormModalVisible);
     };
 
-    return(
-        <View style={styles.container}>
-            <Text>{props.characterName}</Text>
-            <Text>Caractéristique de lancement de sort</Text>
-            <Text>DD</Text>
-            <Text>Bonus sorts</Text>
-            <ScrollView>
-
-                <View style={[styles.row, styles.box]}>
-                    <Text>Sorts lvl 0</Text>
-                    <FontAwesome name="arrow-circle-right" size={50} color="black"/>
-                </View>
-
-                <View style={styles.box}>
-                    <View style={styles.row}>
-                        <Text>Sorts lvl 1</Text>
-                        <Text>Totaux</Text>
-                        <Text>Restants</Text>
-                        <TouchableOpacity onPress={() => {
-                            setIsLvl1SpellsVisible(!isLvl1SpellsVisible);
-                        }}>
-                            {isLvl1SpellsVisible ? (
-                                <FontAwesome name="arrow-circle-down" size={20} color="black"/>
-                            ) : (
-                                <FontAwesome name="arrow-circle-right" size={20} color="black"/>
-                            )}
-                        </TouchableOpacity>
-                    </View>
-
-                    <TouchableOpacity onPress={() => {
-                        toggleFormModal('1');
-                    }}>
-                        <FontAwesome name="plus" size={20} color="black"/>
-                    </TouchableOpacity>
-                    {allSpells.level1.length > 0 && isLvl1SpellsVisible ? (
-                        <FlatList
-                            data={allSpells.level1}
-                            renderItem={({item}) => {
-                                return (
-                                    <SpellCard spell={item}/>
-                                )
-                            }}
-                        />
-                    ): null}
-
-                </View>
-
-                <View style={[styles.row, styles.box]}>
-                    <Text>Sorts lvl 2</Text>
-                    <FontAwesome name="arrow-circle-right" size={50} color="black"/>
-                </View>
-                <View style={[styles.row, styles.box]}>
-                    <Text>Sorts lvl 3</Text>
-                    <FontAwesome name="arrow-circle-right" size={50} color="black"/>
-                </View>
-                <View style={[styles.row, styles.box]}>
-                    <Text>Sorts lvl 4</Text>
-                    <FontAwesome name="arrow-circle-right" size={50} color="black"/>
-                </View>
-                <View style={[styles.row, styles.box]}>
-                    <Text>Sorts lvl 5</Text>
-                    <FontAwesome name="arrow-circle-right" size={50} color="black"/>
-                </View>
-                <View style={[styles.row, styles.box]}>
-                    <Text>Sorts lvl 6</Text>
-                    <FontAwesome name="arrow-circle-right" size={50} color="black"/>
-                </View>
-                <View style={[styles.row, styles.box]}>
-                    <Text>Sorts lvl 7</Text>
-                    <FontAwesome name="arrow-circle-right" size={50} color="black"/>
-                </View>
-                <View style={[styles.row, styles.box]}>
-                    <Text>Sorts lvl 8</Text>
-                    <FontAwesome name="arrow-circle-right" size={50} color="black"/>
-                </View>
-                <View style={[styles.row, styles.box]}>
-                    <Text>Sorts lvl 9</Text>
-                    <FontAwesome name="arrow-circle-right" size={50} color="black"/>
-                </View>
-                <Modal isVisible={isFormModalVisible}>
-                    <View>
-                        <SpellForm allSpells={allSpells} setAllSpells={setAllSpells} characterClass={'ranger'} setIsFormModalVisible={setIsFormModalVisible}/>
-                    </View>
-                </Modal>
-            </ScrollView>
-        </View>
-    )
+    if(props.selectedClass != '' || props.characterClass !== undefined){
+        return(
+            <View style={styles.container}>
+                <Text>{props.characterName}</Text>
+                <Text>Caractéristique de lancement de sort</Text>
+                <Text>DD</Text>
+                <Text>Bonus sorts</Text>
+                <ScrollView style={styles.scrollView}>
+    
+                    <SpellLevelCard setIsLvlSpellsVisible={setIsLvl0SpellsVisible} isLvlSpellsVisible={isLvl0SpellsVisible} toggleFormModal={toggleFormModal} allSpells={allSpells.level0} lvl='0'/>
+                    <SpellLevelCard setIsLvlSpellsVisible={setIsLvl1SpellsVisible} isLvlSpellsVisible={isLvl1SpellsVisible} toggleFormModal={toggleFormModal} allSpells={allSpells.level1} lvl='1'/>
+                    <SpellLevelCard setIsLvlSpellsVisible={setIsLvl2SpellsVisible} isLvlSpellsVisible={isLvl2SpellsVisible} toggleFormModal={toggleFormModal} allSpells={allSpells.level2} lvl='2'/>
+                    <SpellLevelCard setIsLvlSpellsVisible={setIsLvl3SpellsVisible} isLvlSpellsVisible={isLvl3SpellsVisible} toggleFormModal={toggleFormModal} allSpells={allSpells.level3} lvl='3'/>
+                    <SpellLevelCard setIsLvlSpellsVisible={setIsLvl4SpellsVisible} isLvlSpellsVisible={isLvl4SpellsVisible} toggleFormModal={toggleFormModal} allSpells={allSpells.level4} lvl='4'/>
+                    <SpellLevelCard setIsLvlSpellsVisible={setIsLvl5SpellsVisible} isLvlSpellsVisible={isLvl5SpellsVisible} toggleFormModal={toggleFormModal} allSpells={allSpells.level5} lvl='5'/>
+                    <SpellLevelCard setIsLvlSpellsVisible={setIsLvl6SpellsVisible} isLvlSpellsVisible={isLvl6SpellsVisible} toggleFormModal={toggleFormModal} allSpells={allSpells.level6} lvl='6'/>
+                    <SpellLevelCard setIsLvlSpellsVisible={setIsLvl7SpellsVisible} isLvlSpellsVisible={isLvl7SpellsVisible} toggleFormModal={toggleFormModal} allSpells={allSpells.level7} lvl='7'/>
+                    <SpellLevelCard setIsLvlSpellsVisible={setIsLvl8SpellsVisible} isLvlSpellsVisible={isLvl8SpellsVisible} toggleFormModal={toggleFormModal} allSpells={allSpells.level8} lvl='8'/>
+                    <SpellLevelCard setIsLvlSpellsVisible={setIsLvl9SpellsVisible} isLvlSpellsVisible={isLvl9SpellsVisible} toggleFormModal={toggleFormModal} allSpells={allSpells.level9} lvl='9'/>
+                    
+                    <Modal isVisible={isFormModalVisible}>
+                        <View>
+                            <SpellForm selectedLevel={selectedLevel} allSpells={allSpells} setAllSpells={setAllSpells} characterClass={props.selectedClass} setIsFormModalVisible={setIsFormModalVisible}/>
+                        </View>
+                    </Modal>
+                </ScrollView>
+            </View>
+        )
+    } else {
+        return (
+            <View style={styles.container}>
+                <Text style={{color:'red'}}>Veuillez sélectionner une classe avant de choisir vos sorts</Text>
+            </View>
+        )
+    }
+    
 
 }
 
@@ -229,31 +125,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent: 'space-evenly'
     },
-    smallRow: {
-        flexBasis:'auto',
-        flexShrink: 1,
-        flexGrow: 0
-    },
-    bigRow: {
-        flexBasis:'auto',
-        flexGrow: 1,
-        flexShrink: 0
-    },
-    text: {
-        borderColor: 'white',
-        borderBottomColor: 'black',
-        borderWidth: 1
-    },
-    image: {
-        height:100,
-        width:100,
-        borderRadius: 50
-    },
-    modalImage: {
-        flexDirection:'row',
-        backgroundColor: 'rgba(0,125,125,1)',
-        justifyContent: 'space-evenly',
-        paddingTop:20,
-        paddingBottom:20
+    scrollView:{
+        marginBottom: 65
     }
 });

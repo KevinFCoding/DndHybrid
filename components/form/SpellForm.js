@@ -9,12 +9,14 @@ export default function SpellForm(props){
     const [isLoading, setIsLoading] = useState(true)
 
     const [availableSpells, setAvailableSpells] = useState([]);
-    const [selectedSpell, setSelectedSpell] = useState({});
+    const [selectedSpellUrl, setSelectedSpellUrl] = useState('');
+    const [selectedSpell, setSelectedSpell] = useState('');
 
     useEffect(() => {
         const fetchUrl = async () => {
             try {
-                const resSpells = await axios.get(`https://www.dnd5eapi.co/api/classes/`+props.characterClass+`/spells/`);
+                console.log(props.characterClass)
+                const resSpells = await axios.get(`https://www.dnd5eapi.co/api/classes/`+props.characterClass.toLowerCase()+`/spells/`);
 
                 setTimeout(() => {
                     const spellsData = resSpells.data.results;
@@ -30,25 +32,86 @@ export default function SpellForm(props){
                 setIsLoading(false)
             }
         }
+
         fetchUrl();
     }, []);
+
+    useEffect(() => {
+        if (selectedSpell != ''){
+            sendFormData()
+        }
+    }, [selectedSpell])
+
     const sendFormData = () => {
-        const newSpells = [];
-        props.allSpells.map(e =>
-            newSpells.push(e)
-        )
-        newSpells.push(selectedSpell)
-        props.setAllSpells(newSpells);
+
+        console.log(selectedSpell)
+
+        switch(props.selectedLevel){
+            case'0': 
+                props.allSpells.level0.push(selectedSpell);
+                break;
+            case'1': 
+                props.allSpells.level1.push(selectedSpell);
+                break;
+            case'2': 
+                props.allSpells.level2.push(selectedSpell);
+                break;
+            case'3': 
+                props.allSpells.level3.push(selectedSpell);
+                break;
+            case'4': 
+                props.allSpells.level4.push(selectedSpell);
+                break;
+            case'5': 
+                props.allSpells.level5.push(selectedSpell);
+                break;
+            case'6': 
+                props.allSpells.level6.push(selectedSpell);
+                break;
+            case'7': 
+                props.allSpells.level7.push(selectedSpell);
+                break;
+            case'8': 
+                props.allSpells.level8.push(selectedSpell);
+                break;
+            case'9': 
+                props.allSpells.level9.push(selectedSpell);
+                break;
+        }
+
+        props.setAllSpells(props.allSpells);
         props.setIsFormModalVisible(false);
+    }
+
+    const fetchSelectedSpellUrl = async () => {
+        try{
+            const resSelectedSpellUrl = await axios.get(`https://www.dnd5eapi.co`+selectedSpellUrl);
+
+            setTimeout(() => {
+                
+                const spellData = resSelectedSpellUrl.data;
+                setSelectedSpell(spellData, () => {
+                    console.log('state changed', selectedSpell)
+                    sendFormData()
+                });
+            }, 1000)
+        } catch(err) {
+            setError(err.message)
+            setIsLoading(false)
+        }
+    }
+
+    const toggleModal = () => {
+        props.setIsFormModalVisible(false)
     }
 
     return (
         <View style={styles.container}>
             <Picker
                 style={styles.picker}
-                selectedValue={selectedSpell}
+                selectedValue={selectedSpellUrl}
                 onValueChange={(itemValue, itemIndex) =>
-                    setSelectedSpell(itemValue)
+                    setSelectedSpellUrl(itemValue)
                 }
             >
                 {availableSpells.map(e =>
@@ -56,7 +119,11 @@ export default function SpellForm(props){
                 )}
             </Picker>
             <Text>{error}</Text>
-            <Button onPress={sendFormData}>Sélectionner votre nouveau sort</Button>
+            {selectedSpellUrl != '' ? (
+                <Button onPress={fetchSelectedSpellUrl}>Sélectionner votre nouveau sort</Button>
+            ): null}
+            
+            <Button onPress={toggleModal}>Annuler</Button>
         </View>
     );
 };
