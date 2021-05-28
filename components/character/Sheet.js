@@ -1,11 +1,12 @@
 import {StyleSheet, Text, View, TextInput} from "react-native";
+import Button from '../Button'
 import React from 'react';
 
 export default function Sheet(props) {
     let textInputToString = '';
     return (
         <View style={styles.column}>
-            <View style={props.styles.namePc}>
+            <View style={props.styles.characterName}>
                 <TextInput
                     placeholder='Enter your character name here'
                     onChangeText={
@@ -129,6 +130,9 @@ export default function Sheet(props) {
        }
     }
 
+    function test(){
+        console.log(props.characterName);
+    }
     function myModifier(statNumber) {
         switch (parseInt(statNumber)) {
             case 0 :

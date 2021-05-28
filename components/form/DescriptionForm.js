@@ -36,7 +36,7 @@ export default function DescriptionForm(props) {
             <View>
                 <TextInput placeholder="Enter Player Name" 
                     style={styles.input}
-                    onChangeText={text => setName(text)}
+                    onChangeText={text => props.setCharacterName(text)}
                     value={name}
                 />
                 <TextInput placeholder="Enter Character size" 

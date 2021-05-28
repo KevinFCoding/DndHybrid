@@ -31,7 +31,7 @@ export default function App() {
     const [charisma, setCharisma] = useState("10");
     const [charismaModifier, setCharismaModifier] = useState("0");
 
-    const [characterName, setCharacterName] = useState([]);
+    const [characterName, setCharacterName] = useState('WESHALORS');
     const [characterLvl, setCharacterLvl] = useState('1');
     const [proficiencyBonus, setProficiencyBonus] = useState('2')
     const [selectedClass, setSelectedClass] = useState('');
@@ -46,37 +46,42 @@ export default function App() {
     const [isLoading, setIsLoading] = useState(true)
 
     const stats = {
-        strength :strength ,
+        strength: strength,
         dexterity: dexterity,
-        constitution : constitution,
-        intelligence :intelligence,
-        wisdom: wisdom ,
+        constitution: constitution,
+        intelligence: intelligence,
+        wisdom: wisdom,
         charisma: charisma
     }
     const modifier = {
-        strength :strengthModifier ,
+        strength: strengthModifier,
         dexterity: dexterityModifier,
-        constitution : constitutionModifier,
-        intelligence :intelligenceModifier,
+        constitution: constitutionModifier,
+        intelligence: intelligenceModifier,
         wisdom: wisdomModifier,
         charisma: charismaModifier
     }
     const setStats = {
-        strength :setStrength ,
+        strength: setStrength,
         dexterity: setDexterity,
-        constitution : setConstitution,
-        intelligence :setIntelligence,
+        constitution: setConstitution,
+        intelligence: setIntelligence,
         wisdom: setWisdom,
         charisma: setCharisma
     }
 
     const setStatsModifier = {
-        strength :setStrengthModifier ,
+        strength: setStrengthModifier,
         dexterity: setDexterityModifier,
-        constitution : setConstitutionModifier,
-        intelligence :setIntelligenceModifier,
+        constitution: setConstitutionModifier,
+        intelligence: setIntelligenceModifier,
         wisdom: setWisdomModifier,
         charisma: setCharismaModifier
+    }
+
+    switch (characterLvl) {
+        case characterLvl < 5 :
+            setProficiencyBonus(2);
     }
 
     useEffect(() => {
@@ -143,43 +148,48 @@ export default function App() {
                                     styles={styles}
                             />}
                     </Tab.Screen>
-                    <Tab.Screen name="Bio" component={Bio}/>
+                    <Tab.Screen name="Bio">
                     {(props) =>
                         <Bio  {...props}
-                                characterName={characterName}
-                                setCharacterName={setCharacterName}
-                                selectedBackground={selectedBackground}
-                                styles={styles}
+                              characterName={characterName}
+                              setCharacterName={setCharacterName}
+                              selectedBackground={selectedBackground}
+                              styles={styles}
                         />}
-                    <Tab.Screen name="Skills" component={Skills}/>
+                    </Tab.Screen>
+                    <Tab.Screen name="Skills">
                     {(props) =>
                         <Skills  {...props}
-                                strength = {stats.strength}
-                                characterName={characterName}
-                                setCharacterName={setCharacterName}
-                                selectedClass={selectedClass}
-                                selectedRace={selectedRace}
-                                selectedBackground={selectedBackground}
-                                styles={styles}
+                                 strength={stats.strength}
+                                 characterName={characterName}
+                                 setCharacterName={setCharacterName}
+                                 selectedClass={selectedClass}
+                                 selectedRace={selectedRace}
+                                 selectedBackground={selectedBackground}
+                                 styles={styles}
                         />}
-                    <Tab.Screen name="Equipment" component={Equipment}/>
+                    </Tab.Screen>
+                    <Tab.Screen name="Equipment">
                     {(props) =>
                         <Equipment  {...props}
-                                characterName={characterName}
-                                setCharacterName={setCharacterName}
-                                selectedClass={selectedClass}
-                                backgrounds={backgroundList}
-                                styles={styles}
+                                    characterName={characterName}
+                                    setCharacterName={setCharacterName}
+                                    selectedClass={selectedClass}
+                                    backgrounds={backgroundList}
+                                    styles={styles}
                         />}
-                    <Tab.Screen name="Spells" component={Spells}/>
+                    </Tab.Screen>
+                    <Tab.Screen name="Spells">
                     {(props) =>
                         <Spells  {...props}
-                                characterName={characterName}
-                                setCharacterName={setCharacterName}
-                                characterLvl={characterLvl}
-                                selectedClass={selectedClass}
-                                styles={styles}
+                                 characterName={characterName}
+                                 setCharacterName={setCharacterName}
+                                 proficiencyBonus={proficiencyBonus}
+                                 characterLvl={characterLvl}
+                                 selectedClass={selectedClass}
+                                 styles={styles}
                         />}
+                    </Tab.Screen>
                 </Tab.Navigator>
             </SafeAreaView>
         </NavigationContainer>
@@ -191,10 +201,10 @@ const styles = StyleSheet.create({
     safeArea: {
         flex: 1
     },
-    namePc: {
+    characterName: {
         width: '95%',
         alignItems: 'center',
-        margin : 0,
+        margin: 0,
         borderWidth: 1
     }
 });

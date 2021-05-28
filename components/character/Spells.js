@@ -4,7 +4,7 @@ import { StyleSheet, Text, Image, View, Dimensions, TouchableOpacity } from "rea
 
 export default function Spells(props) {
     return(
-        <View><Text>IN PROGRESS</Text></View>
+        <View><Text>{props.characterName}</Text></View>
     )
 
 }
