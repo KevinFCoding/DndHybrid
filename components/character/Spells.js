@@ -1,11 +1,8 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, View, Dimensions, ScrollView, FlatList, TouchableOpacity} from "react-native";
-import {FontAwesome} from '@expo/vector-icons';
-import SpellCard from './SpellCard';
 import SpellForm from "../form/SpellForm";
 import Modal from 'react-native-modal';
 import SpellLevelCard from './SpellLevelCard';
-import Button from '../Button';
 
 export default function Spells(props) {
 
@@ -15,6 +12,10 @@ export default function Spells(props) {
     //Sorts en fonction de la classe du personnage (api/classes/{nom classe en anglais}/spells)
 
     // api/classes/ranger/levels/1 -> spellcasting -> spells_known
+
+    //Pour tri en fonction des niveaux de spells : dans chaque Spell -> level : nb
+    //Il faudra faire un call API pour chaque spell et vérifier son niveau puis le comparer au lvl de SpellForm avant de l'afficher
+    //Le spell étant déjà call il faudra changer la manière de récupérer et d'enregistrer les spells (plus d'appel lors de l'enregistrement mais appel avant puis enregistrement de l'appel déjà appelé)
 
     const [isLvl0SpellsVisible, setIsLvl0SpellsVisible] = useState(false);
     const [isLvl1SpellsVisible, setIsLvl1SpellsVisible] = useState(false);

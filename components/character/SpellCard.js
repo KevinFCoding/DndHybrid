@@ -20,7 +20,7 @@ export default function SpellCard(props){
                     <Text>{props.spell.concentration}</Text>
                     <Text>{props.spell.casting_time}</Text>
                     {props.spell.damage_type !== undefined ? (
-                        <Text>{props.spell.damage_type}</Text>
+                        <Text>{props.spell.attack_type}</Text>
                     ): null}
                 </View>
                 <View >

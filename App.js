@@ -5,17 +5,13 @@ import Skills from './components/character/Skills';
 import Equipment from './components/character/Equipment';
 import Spells from './components/character/Spells';
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-import {StyleSheet, Image, Dimensions} from 'react-native';
+import {StyleSheet, Dimensions, Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import axios from 'axios';
-import {useEffect, useState} from "react";
-import {LoadingIndicator} from "react-select/src/components/indicators";
-import {LoadingMessage} from "react-select/src/components/Menu";
-import AppLoadingPlaceholder from "expo/build/launch/AppLoadingPlaceholder";
 
 export default function App() {
 
