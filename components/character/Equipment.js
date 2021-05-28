@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, Image, View, Button } from "react-native";
 import Modal from 'react-native-modal';
 
-
 const equipment = {
     "Range":"",
     "Cost":"",
@@ -44,7 +43,7 @@ export default function Equipment() {
             <Modal
                 isVisible={isModalVisible}>
                 <View>
-               {/*  <EquipmentForm setEquipmentData={setEquipment} setIsModalVisible={setIsModalVisible} equipment={equipment}/> */}
+                    <DescriptionForm setEquipmentData={setEquipment} setIsModalVisible={setIsModalVisible} equipment={equipment}/>
                 </View>
             </Modal>
         </View>
