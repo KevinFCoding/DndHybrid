@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, TextInput, Picker, Dimensions, ScrollView} from "react-native";
+import {StyleSheet, Text, View, TextInput, Picker, Dimensions, ScrollView, CheckBox} from "react-native";
 import Button from '../Button'
 import React, {useState, useEffect} from 'react';
 import axios from "axios";
@@ -12,6 +12,13 @@ export default function Sheet(props) {
     const [characterAC, setCharacterAC] = useState("10");
     const [characterSpeed, setCharacterSpeed] = useState("0");
     const [rolledStats, setRolledStats] = useState([]);
+    //Death Saves
+    const [deathFirstSuccess, setFirstSuccess] = useState(false);
+    const [deathSecondSuccess, setSecondSuccess] = useState(false);
+    const [deathThirdSuccess, setThirdSuccess] = useState(false);
+    const [deathFirstFailure, setFirstFailure] = useState(false);
+    const [deathSecondFailure, setSecondFailure] = useState(false);
+    const [deathThirdFailure, setThirdFailure] = useState(false);
 
     return (
         // NAME
@@ -34,7 +41,6 @@ export default function Sheet(props) {
                         selectedValue={props.selectedClass}
                         onValueChange={(e) => {
                             classSelected(e);
-                            getHp();
                         }}>
                         {props.classes.map((item, index) => {
                             return (<Picker.Item label={item} value={item} key={index}/>)
@@ -124,7 +130,7 @@ export default function Sheet(props) {
                             text => {
                                 textInputToString = text.toString();
                                 props.setStats.strength(textInputToString);
-                                getModifier(textInputToString, "str");
+                                setModifier(textInputToString, "str");
                             }
                         }
                         value={props.characterStats.strength}
@@ -141,7 +147,7 @@ export default function Sheet(props) {
                             text => {
                                 textInputToString = text.toString();
                                 props.setStats.dexterity(textInputToString);
-                                getModifier(textInputToString, "dex");
+                                setModifier(textInputToString, "dex");
                             }
                         }
                         value={props.characterStats.dexterity}
@@ -159,7 +165,7 @@ export default function Sheet(props) {
                                 textInputToString = text.toString();
                                 props.setStats.constitution(textInputToString);
                                 getHp();
-                                getModifier(textInputToString, "con");
+                                setModifier(textInputToString, "con");
                             }
                         }
                         value={props.characterStats.constitution}
@@ -176,7 +182,7 @@ export default function Sheet(props) {
                             text => {
                                 textInputToString = text.toString();
                                 props.setStats.intelligence(textInputToString);
-                                getModifier(textInputToString, "int");
+                                setModifier(textInputToString, "int");
                             }
                         }
                         value={props.characterStats.intelligence}
@@ -193,7 +199,7 @@ export default function Sheet(props) {
                             text => {
                                 textInputToString = text.toString();
                                 props.setStats.wisdom(textInputToString);
-                                getModifier(textInputToString, "wis");
+                                setModifier(textInputToString, "wis");
                                 updatePP();
                             }
                         }
@@ -210,7 +216,7 @@ export default function Sheet(props) {
                             text => {
                                 textInputToString = text.toString();
                                 props.setStats.charisma(textInputToString);
-                                getModifier(textInputToString, "cha");
+                                setModifier(textInputToString, "cha");
                             }
                         }
                         value={props.characterStats.charisma}
@@ -220,97 +226,147 @@ export default function Sheet(props) {
                 </View>
             </View>
             <View>
-                <Text>You rolled: {rolledStats[0]}, {rolledStats[1]}, {rolledStats[2]}, {rolledStats[3]}, {rolledStats[4]}, {rolledStats[5]}</Text>
+                <Text>You
+                    rolled: {rolledStats[0]}, {rolledStats[1]}, {rolledStats[2]}, {rolledStats[3]}, {rolledStats[4]}, {rolledStats[5]}</Text>
             </View>
             <View>
                 <Button onPress={rollDicesForStats}>Roll stats</Button>
             </View>
-            <View style={[styles.healthBox, styles.column]}>
-                <View>
-                    <Text>max Hp : {characterHp}</Text>
-                    <TextInput
-                        onChangeText={
-                            text => {
-                                setCharacterCurrentHp(text);
+            <View style={styles.container}>
+                <View style={[styles.healthBox]}>
+                    <View>
+                        <Text>max Hp : {characterHp}</Text>
+                        <TextInput
+                            onChangeText={
+                                text => {
+                                    setCharacterCurrentHp(text);
+                                }
                             }
-                        }
-                        value={characterCurrentHp}
-                    />
+                            value={characterCurrentHp}
+                        />
+                    </View>
+                </View>
+                <View style={styles.deathBox}>
+                    <Text>Deaths saving throws</Text>
+                    <View style={styles.checkbox}>
+                        <Text>Success</Text>
+                        <CheckBox
+                            value={deathFirstSuccess}
+                            onValueChange={setFirstSuccess}
+                            style={styles.checkbox}
+                        />
+                        <CheckBox
+                            value={deathSecondSuccess}
+                            onValueChange={setSecondSuccess}
+                            style={styles.checkbox}
+                        />
+                        <CheckBox
+                            value={deathThirdSuccess}
+                            onValueChange={setThirdSuccess}
+                            style={styles.checkbox}
+                        />
+                    </View>
+                    <View style={styles.checkbox}>
+                        <Text>Failure</Text>
+                        <CheckBox
+                            value={deathFirstFailure}
+                            onValueChange={setFirstFailure}
+                            style={[styles.checkbox]}
+                        />
+                        <CheckBox
+                            value={deathSecondFailure}
+                            onValueChange={setSecondFailure}
+                            style={styles.checkbox}
+                        />
+                        <CheckBox
+                            value={deathThirdFailure}
+                            onValueChange={setThirdFailure}
+                            style={styles.checkbox}
+                        />
+                    </View>
                 </View>
             </View>
-            <View style={[styles.deathBox, styles.column]}>
-                <View>
-                    <Text>max Hp : {characterHp}</Text>
-                    <TextInput
-                        onChangeText={
-                            text => {
-                                setCharacterCurrentHp(text);
-                            }
-                        }
-                        value={characterCurrentHp}
-                    />
-                </View>
+            <View style={[styles.skills, styles.column]}>
+                {props.skills.map((item, index) => {
+                    return (
+                        <View style={[styles.column, styles.skills]} label={item} value={index} key={index}>
+                            <Text>{item}</Text>
+                        </View>
+                    )
+                })}
             </View>
         </ScrollView>
     )
 
-    function getHp(){
+    function getHp() {
         let totalHp = parseInt(props.characterModifier.constitution);
         console.log(totalHp + 5);
 
         switch (props.selectedClass){
             case 'Barbarian': // Barbarian
                 totalHp = (12 + totalHp);
+                break;
             case 'Bard': // Bard
                 totalHp =8+totalHp
+                break;
             case 'Cleric': // Cleric
                 totalHp = 8+totalHp
+                break;
             case 'Druid': // Druid
                 totalHp =10 + totalHp
+                break;
             case 'Fighter': // Fighter
                 totalHp = 10+totalHp
+                break;
             case 'Monk': // Monk
                 totalHp= 8+totalHp
+                break;
             case 'Paladin': // Paladin
                 totalHp =10+totalHp
+                break;
             case 'Ranger': // Ranger
                 totalHp = 10+totalHp
+                break;
             case 'Rogue': // Rogue
                 totalHp = 8+totalHp
+                break;
             case 'Sorcerer': // Sorcerer
                 totalHp = 6+totalHp
+                break;
             case 'Warlock': // Warlock
                 totalHp =8+totalHp
+                break;
             case 'Wizard': // Wizard
                 totalHp = 6+totalHp
+                break;
             default:
-                totalHp = 8+totalHp
+                throw new Error("No class Selected");
         }
         setCharacterHp(totalHp);
     }
 
     function updatePP() {
+        getModifier('wis');
         let basePP = 10 + props.characterModifier.wisdom;
-        console.log(basePP);
-        console.log(typeof basePP);
         props.setPP(basePP.toString());
     }
 
     function lvlUp() {
-        if (props.characterLvl < 5){
+        if (props.characterLvl < 5) {
             props.setProficiencyBonus("2");
-        } else if(props.characterLvl >= 5 && props.characterLvl < 9) {
+        } else if (props.characterLvl >= 5 && props.characterLvl < 9) {
             props.setProficiencyBonus("3");
-        } else if(props.characterLvl >= 9 && props.characterLvl < 13) {
+        } else if (props.characterLvl >= 9 && props.characterLvl < 13) {
             props.setProficiencyBonus("4");
-        } else if(props.characterLvl >= 13 && props.characterLvl < 17) {
+        } else if (props.characterLvl >= 13 && props.characterLvl < 17) {
             props.setProficiencyBonus("5");
-        } else if(props.characterLvl >= 17) {
+        } else if (props.characterLvl >= 17) {
             props.setProficiencyBonus("6");
         }
         console.log(props.proficiencyBonus);
     }
-    function getModifier(statNumber, stat) {
+
+    function setModifier(statNumber, stat) {
         let statModifier = myModifier(statNumber);
         switch (stat) {
             case "str" :
@@ -331,13 +387,35 @@ export default function Sheet(props) {
             case "cha":
                 props.setStatsModifier.charisma(statModifier);
                 break;
+            default:
+                throw new Error("Unvalid State Type " + stat);
         }
     }
+
+    function getModifier(stat) {
+        switch (stat) {
+            case "str" :
+                return props.characterModifier.strength;
+            case "dex":
+                return props.characterModifier.dexterity;
+            case "con":
+                return props.characterModifier.constitution;
+            case "int":
+                return props.characterModifier.intelligence;
+            case "wis":
+                return props.characterModifier.wisdom;
+            case "cha":
+                return props.characterModifier.charisma;
+            default:
+                throw new Error("Unvalid State Type " + stat);
+        }
+    }
+
 
     function rollDicesForStats() {
         let number = 0;
         let diceArray = [];
-        while (rolledStats.length > 0 ) {
+        while (rolledStats.length > 0) {
             rolledStats.pop();
         }
         for (let i = 0; i < 6; i++) {
@@ -357,6 +435,7 @@ export default function Sheet(props) {
 
     function classSelected(classDnd) {
         props.setSelectedClass(classDnd);
+        getHp();
     }
 
     function raceSelected(raceDnd) {
@@ -425,18 +504,41 @@ export default function Sheet(props) {
 
 
 const styles = StyleSheet.create({
+    checkbox: {
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: 'row'
+    },
     centerStat: {
         textAlign: 'center',
         fontSize: 20
     },
-    picker: {
-        backgroundColor:'white',
+    container: {
+        width: Dimensions.get('window').width - 30,
+        backgroundColor: 'white',
         borderWidth: 2,
         paddingTop: 3,
-        paddingBottom:3,
+        paddingBottom: 3,
         margin: 2,
         borderColor: 'black',
-        width: "100%",
+        shadowOffset: {
+            width: 0,
+            height: 5,
+        },
+        shadowOpacity: 0.34,
+        shadowRadius: 6.27,
+
+        elevation: 10,
+    },
+    picker: {
+        backgroundColor: 'white',
+        borderWidth: 2,
+        paddingTop: 3,
+        paddingBottom: 3,
+        margin: 2,
+        borderColor: 'black',
+        borderRadius: 8,
+        width: Dimensions.get('window').width - 45,
         height: 40,
         shadowOffset: {
             width: 0,
@@ -454,7 +556,8 @@ const styles = StyleSheet.create({
     },
     box: {
         margin: 3,
-        width: '33%',
+        justifyContent: "space-evenly",
+        width: '31%',
         padding: 5,
         backgroundColor: 'white',
         borderRadius: 8,
@@ -501,16 +604,38 @@ const styles = StyleSheet.create({
 
     },
     healthBox: {
-        width: '48%',
-        height: '20%',
-        borderWidth: 1,
-        margin: 3
+        width: Dimensions.get('window').width - 38,
+        backgroundColor: 'white',
+        borderWidth: 2,
+        paddingTop: 3,
+        paddingBottom: 3,
+        margin: 2,
+        borderColor: 'black',
+        shadowOffset: {
+            width: 0,
+            height: 5,
+        },
+        shadowOpacity: 0.34,
+        shadowRadius: 6.27,
+
+        elevation: 10,
     },
     deathBox: {
-        width: '48%',
-        height: '20%',
-        borderWidth: 1,
-        margin: 3
+        width: Dimensions.get('window').width - 38,
+        backgroundColor: 'white',
+        borderWidth: 2,
+        paddingTop: 3,
+        paddingBottom: 3,
+        margin: 2,
+        borderColor: 'black',
+        shadowOffset: {
+            width: 0,
+            height: 5,
+        },
+        shadowOpacity: 0.34,
+        shadowRadius: 6.27,
+
+        elevation: 10,
     },
     savesBox: {},
     gearBox: {},
